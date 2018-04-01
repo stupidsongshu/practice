@@ -100,7 +100,7 @@ let server = http.createServer(function(req, res) {
             // 解决方法四 (异步检测操作改写成同步检测操作)
             // 巨坑请注意 (IIFE函数前请用分号隔开)
             ;(function iterator(i) {
-                if (i == files.length) {
+                if (i === files.length) {
                     console.log(filesArr);
                     return;
                 }
