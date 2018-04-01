@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+
+<body>
+<canvas id="canvas" width="400px" height="400px">您的浏览器不支持canvas</canvas>
+<script>
+	var canvas = document.getElementById('canvas')
+	var ctx = canvas.getContext('2d')
+	ctx.beginPath()
+	ctx.strokeStyle = 'blue'
+	var circle = {
+		x: 100,
+		y: 100,
+		r: 50
+	}
+	ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2, false)
+	ctx.stroke()
+</script>
+</body>
+
+</html>

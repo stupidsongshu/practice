@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>blog</title>
+    <!-- <link rel="stylesheet" href="./../node_modules/swiper/dist/css/swiper.min.css">
+    <script src="./../node_modules/swiper/dist/js/swiper.min.js"></script> -->
+    <link rel="stylesheet" href="lib/swiper4/css/swiper.min.css">
+    <script src="lib/swiper4/js/swiper.min.js"></script>
+    <link rel="stylesheet" href="css/blog-index.css">
+</head>
+<body>
+    <ul class="header">
+        <li>首页</li>
+        <li>文章</li>
+        <li>用户</li>
+    </ul>
+
+    <div class="banner swiper-container">
+        <div class="swiper-wrapper">
+            <% for(var i=0;i<banners.length;i++) { %>
+            <div class="swiper-slide">
+                <img src="<%= banners[i].src %>" alt="">
+            </div>
+            <% } %>
+        </div>
+    </div>
+
+    <% for(var i=0; i<articles.length; i++) { %>
+    <a href="/article?id=<%= articles[i].ID %>">
+        <h2><%= articles[i].title %></h2>
+    </a>
+    <div>作者：<%= articles[i].author %> </div>
+    <div>简介：<%= articles[i].summary %></div>
+    <hr>
+    <% } %>
+
+    <script>
+        var swiper = new Swiper('.banner', {
+            autoPlay: true,
+            loop: true
+        })
+    </script>
+</body>
+</html>

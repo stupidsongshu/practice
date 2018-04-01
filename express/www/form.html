@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://localhost:8080/login" method="get">
+        用户名：<input type="text" name="userName"><br>
+        密码：<input type="password" name="userPsw"><br>
+        <input type="submit" value="GET登录">
+    </form>
+
+    <hr>
+
+    <form action="http://localhost:8080/login" method="post">
+        用户名：<input type="text" name="userName"><br>
+        密码：<input type="password" name="userPsw"><br>
+        <input type="submit" value="POST登录">
+    </form>
+
+    <hr>
+    <!-- 6.fileupload.js -->
+    <form action="http://localhost:8080/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file1">
+        <input type="submit" value="submit">
+    </form>
+</body>
+</html>

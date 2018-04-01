@@ -1,0 +1,13 @@
+.header{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.swiper-slide {
+    width: 600px;
+    height: 300px;
+}
+.swiper-slide img {
+    width: 100%;
+}

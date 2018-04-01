@@ -1,0 +1,13 @@
+html
+    head
+        style
+        script
+    body
+        ul(style="width: 300px; height: 400px; background-color: red;")
+            li(style={width: '300px',height: '400px', 'background-color': 'red'}) hello jade
+            li(class='item li')
+            li(class=['item li'])
+        div(class='container', id='div1')
+        div.container#div2
+        div.container(id='div3')
+        div&attributes({class: 'container', id: 'div4'})

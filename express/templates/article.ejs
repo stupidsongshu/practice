@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>blog article</title>
+</head>
+<body>
+    <header>
+        <div>
+            <img src="<%= article.avatar %>" alt="">
+            <span>作者：<%= article.author %></span>
+            <!-- <span>发布时间：<%= new Date(parseInt(article.post_time + '000')).toLocaleDateString() %> <%= new Date(parseInt(article.post_time + '000')).toLocaleTimeString() %></span> -->
+            <span>发布时间：<%= article.postTime %></span>
+        </div>
+    </header>
+    <h1><%= article.title %></h1>
+
+    <!-- <p><%= article.content %></p> -->
+    <!-- <p><%= article.escapeContent %></p> -->
+    <p><%- article.escapeContent %></p>
+</body>
+</html>
