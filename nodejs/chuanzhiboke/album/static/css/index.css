@@ -1,0 +1,11 @@
+.album-dir {
+    display: inline-block;
+    width: 200px;
+    margin: 10px;
+    text-align: center;
+    border: 1px solid #eee;
+    cursor: pointer;
+}
+.album-dir:hover {
+    border: 1px solid #abcdef;
+}
