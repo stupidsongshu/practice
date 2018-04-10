@@ -1,0 +1,59 @@
+一.首页
+    1.banner  t_banner
+        ID
+        title        varchar(16)
+        description  varchar(300)
+        href         varchar(300)
+    2.产品介绍 t_product_intro
+        ID
+        title        varchar(16)
+        description  varchar(200)
+        href         varchar(300)
+    3.用户评价 t_customer_evaluation
+        ID
+        title        varchar(32)
+        description  varchar(200)
+        img_src       varchar(300)
+二.技术
+    1.新闻    t_news
+        ID
+        title        varchar(100)
+        summary      varchar(500)
+        href         varchar(300)
+        icon_src     varchar(300)
+        big_pic_src  varchar(300)
+        content      text
+三.blog
+    1.博文    t_blog
+        ID
+        title        varchar(100)
+        pic_src      varchar(300)
+        pic_big_src  varchar(300)
+        summary      varchar(500)
+        content      text
+        post_time    timestamp
+        author       varchar(32)
+        n_view       int
+四.联系
+    1.地址    t_contact
+        ID
+        street       varchar(50)
+        phone        varchar(20)
+        fax          varchar(20)
+        email        varchar(64)
+        weibo        varchar(40)
+        weixin       varchar(40)
+        map?
+    2.发送信息 t_msg
+        ID
+        name         varchar(16)
+        email        varchar(64)
+        phone        varchar(20)
+        subject      text
+五.关于我们
+    1.关于我们 t_aboutus 
+        ID
+        title        varchar(200)
+        content      text
+        pic_src      varchar(300)
+        href         varchar(300)

@@ -15,8 +15,8 @@ router.use((req, res, next) => {
 
 router.post('/user/register', (req, res, next) => {
     let username = req.body.username
-    var password = req.body.password
-    var repassword = req.body.repassword
+    let password = req.body.password
+    let repassword = req.body.repassword
 
     if (username === '') {
         responseData.code = 1
@@ -51,7 +51,7 @@ router.post('/user/register', (req, res, next) => {
         }
 
         // 保存用户信息到数据库
-        var user = new User({
+        let user = new User({
             username: username,
             password: password
         })
@@ -60,6 +60,43 @@ router.post('/user/register', (req, res, next) => {
         responseData.msg = '注册成功'
         res.json(responseData)
     })
+})
+
+router.post('/user/login', (req, res, next) => {
+    let username = req.body.username
+    let password = req.body.password
+
+    if (!username || !password) {
+        responseData.code = 1
+        responseData.msg = '用户名或密码不能为空'
+        res.json(responseData)
+        return
+    }
+    User.findOne({
+        username: username,
+        password: password
+    }).then(userInfo => {
+        if (!userInfo) {
+            responseData.code = 2
+            responseData.msg = '用户名或密码错误'
+            res.json(responseData)
+            return
+        }
+
+        let info = {
+            id: userInfo._id,
+            username: userInfo.username
+        }
+        responseData.msg = '登录成功'
+        responseData.response = info
+        req.cookies.set('userInfo', JSON.stringify(info))
+        res.json(responseData)
+    })
+})
+
+router.get('/user/logout', (req, res, next) => {
+    req.cookies.set('userInfo', null)
+    res.json(responseData)
 })
 
 module.exports = router

@@ -1,3 +1,7 @@
 body {
     background-color: #abcdef;
 }
+
+.hint-tip {
+    color: red;
+}
