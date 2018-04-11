@@ -38,8 +38,8 @@ app.use((req, res, next) => {
             // 判断当前登录用户是否为管理员
             User.findById(req.userInfo.id).then(userInfo => {
                 req.userInfo.isAdmin = Boolean(userInfo.isAdmin)
+                next()
             })
-            next()
         } catch (error) {
             console.log(error)
             next()

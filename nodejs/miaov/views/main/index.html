@@ -12,19 +12,19 @@
 <body>
     <div>
         {% if !userInfo.id %}
-        <div id="registerBox">
+        <div id="loginBox">
+            username: <input type="text" class="username"><br>
+            password: <input type="password" class="password"><br>
+            <button class="btn-login">登录</button>
+            <span>没有账号？<a href="javascript:;" class="toggleRegister">立即注册</a></span>
+        </div>
+
+        <div id="registerBox" style="display: none;">
             username: <input type="text" class="username"><br>
             password: <input type="password" class="password"><br>
             repassword: <input type="password" class="repassword"><br>
             <button class="btn-register">注册</button>
             <span>已有账号？<a href="javascript:;" class="toggleLogin">立即登录</a></span>
-        </div>
-    
-        <div id="loginBox" style="display: none;">
-            username: <input type="text" class="username"><br>
-            password: <input type="password" class="password"><br>
-            <button class="btn-login">登录</button>
-            <span>没有账号？<a href="javascript:;" class="toggleRegister">立即注册</a></span>
         </div>
 
         {% else %}

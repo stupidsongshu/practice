@@ -26,14 +26,14 @@ router.post('/user/register', (req, res, next) => {
     }
 
     if (password === '') {
-        responseData.code = 1
+        responseData.code = 2
         responseData.msg = '密码不能为空'
         res.json(responseData)
         return
     }
 
     if (password !== repassword) {
-        responseData.code = 1
+        responseData.code = 3
         responseData.msg = '两次密码不一致'
         res.json(responseData)
         return
@@ -45,6 +45,7 @@ router.post('/user/register', (req, res, next) => {
     }).then(userInfo => {
         console.log(userInfo)
         if (userInfo) {
+            responseData.code = 4
             responseData.msg = '用户名已被注册'
             res.json(responseData)
             return

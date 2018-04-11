@@ -1,0 +1,15 @@
+<!-- <nav aria-label="...">
+    <ul class="pager">
+        <li><a href="/admin/user?pageNo={{pageNo-1}}">Previous</a></li>
+        <li>总共 {{count}} 条数据，每页显示 {{pageSize}} 条数据，总共 {{pageTotalNo}} 页，当前第 {{pageNo}} 页</li>
+        <li><a href="/admin/user?pageNo={{pageNo+1}}">Next</a></li>
+    </ul>
+</nav> -->
+
+<nav aria-label="...">
+    <ul class="pager">
+        <li class="previous"><a href="{{url}}?pageNo={{pageNo-1}}"><span aria-hidden="true">&larr;</span> 前一页</a></li>
+        <li>总共 {{count}} 条数据，每页显示 {{pageSize}} 条数据，总共 {{pageTotalNo}} 页，当前第 {{pageNo}} 页</li>
+        <li class="next"><a href="{{url}}?pageNo={{pageNo+1}}">后一页 <span aria-hidden="true">&rarr;</span></a></li>
+    </ul>
+</nav>
