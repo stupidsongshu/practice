@@ -2,6 +2,7 @@ const express = require('express')
 const url = require('url')
 const User = require('../models/User')
 const Category = require('../models/Category')
+const Content = require('../models/Content')
 
 let router = express.Router()
 
@@ -77,7 +78,7 @@ router.get('/category', (req, res, next) => {
         pageNo = Math.min(pageNo, 1)
 
         let skip = (pageNo - 1) * pageSize
-        Category.find().limit(pageSize).skip(skip).then(categories => {
+        Category.find().sort({_id: -1}).limit(pageSize).skip(skip).then(categories => {
             res.render('admin/category.html', {
                 categories,
                 pageNo,
@@ -123,6 +124,182 @@ router.post('/category/add', (req, res, next) => {
         res.render('admin/success.html', {
             successMsg: '分类添加成功',
             url: '/admin/category'
+        })
+    })
+})
+
+// 分类更新
+router.get('/category/update', (req, res, next) => {
+    let id = req.query.id
+    Category.findById(id).then(category => {
+        if (!category) {
+            res.render('admin/error.html', {
+                errorMsg: '分类信息不存在'
+            })
+        } else {
+            res.render('admin/category_update.html', {
+                category
+            })
+        }
+    })
+})
+router.post('/category/update', (req, res, next) => {
+    let id = req.query.id
+    let name = req.body.name || ''
+
+    Category.findById(id).then(category => {
+        if (!category) {
+            res.render('admin/error.html', {
+                errorMsg: '分类信息不存在'
+            })
+            return Promise.reject()
+        } else {
+            // 没有修改名称
+            if (name === category.name) {
+                res.render('admin/success', {
+                    successMsg: '分类信息更新成功',
+                    url: '/admin/category'
+                })
+                return Promise.reject()
+            } else {
+                // 判断即将修改的分类名称在数据库中是否已经存在、
+                return Category.findOne({
+                    _id: {$ne: id},
+                    name
+                })
+            }
+        }
+    }).then(sameCategory => {
+        if (sameCategory) {
+            res.render('admin/error', {
+                errorMsg: '分类信息已存在，不允许修改'
+            })
+            return Promise.reject()
+        } else {
+            return Category.update({
+                _id: id
+            }, {
+                name
+            })
+        }
+    }).then(() => {
+        res.render('admin/success', {
+            successMsg: '分类信息更新成功',
+            url: '/admin/category'
+        })
+    })
+})
+
+// 分类删除
+router.get('/category/delete', (req, res, next) => {
+    let id = req.query.id
+
+    Category.findById(id).then(category => {
+        if (!category) {
+            res.render('admin/error.html', {
+                errorMsg: '分类信息不存在'
+            })
+            return Promise.reject()
+        } else {
+            return Category.remove({
+                _id: id
+            })
+        }
+    }).then(() => {
+        res.render('admin/success', {
+            successMsg: '分类信息删除成功',
+            url: '/admin/category'
+        })
+    })
+})
+
+// 内容首页
+router.get('/content', (req, res, next) => {
+    let pageNo = 1;
+    let pageSize = 2;
+    let qs = url.parse(req.url, true)
+    if (qs.pageNo !== '' && qs.pageNo !== undefined) {
+        pageNo = qs.pageNo
+    }
+    if (qs.pageSize !== '' && qs.pageSize !== undefined) {
+        pageSize = qs.pageSize
+    }
+
+    Content.count().then(count => {
+        let pageTotalNo = Math.ceil(count / pageSize)
+        pageNo = Math.max(pageNo, pageTotalNo)
+        pageNo = Math.min(pageNo, 1)
+
+        let skip = (pageNo - 1) * pageSize
+        // Content.find().sort({_id: -1}).limit(pageSize).skip(skip).then(contents => {
+        //     // 根据category查询相应字段
+        //     ;(function itrator(i) {
+        //         if (i === contents.length) {
+        //             res.render('admin/Content.html', {
+        //                 contents,
+        //                 pageNo,
+        //                 pageSize,
+        //                 count,
+        //                 pageTotalNo,
+        //                 url: '/admin/Content'
+        //             })
+        //             return
+        //         }
+
+        //         Category.findOne(contents[i].category).then(category => {
+        //             console.log('category', category)
+        //             contents[i].categoryName = category.name
+        //             // itrator(i++) // 注意此处巨坑：i++ 是先赋值后自增，会导致无限调用itrator(0)，解决方法1:itrator(++i)，解决方法二:itrator(i+1)
+        //             itrator(++i)
+        //         })
+        //     })(0);
+        // })
+
+        Content.find().sort({_id: -1}).limit(pageSize).skip(skip).populate('category').then(contents => {
+            console.log(contents)
+            res.render('admin/Content.html', {
+                contents,
+                pageNo,
+                pageSize,
+                count,
+                pageTotalNo,
+                url: '/admin/Content'
+            })
+        })
+    })
+})
+
+router.get('/content/add', (req, res, next) => {
+    Category.find().sort({_id: -1}).then(categories => {
+        res.render('admin/content_add.html', {
+            categories
+        })
+    })
+})
+router.post('/content/add', (req, res, next) => {
+    if (req.body.category === '') {
+        res.render('admin/error.html', {
+            errorMsg: '所属分类不能为空'
+        })
+        return
+    }
+    if (req.body.title === '') {
+        res.render('admin/error.html', {
+            errorMsg: '内容标题不能为空'
+        })
+        return
+    }
+
+    new Content({
+        category: req.body.category,
+        title: req.body.title,
+        description: req.body.description,
+        content: req.body.content
+    }).save().then(content => {
+        console.log(content)
+        res.render('admin/success.html', {
+            successMsg: '内容添加成功',
+            url: '/admin/content'
         })
     })
 })
