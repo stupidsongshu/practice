@@ -28,9 +28,9 @@ router.get('/user', (req, res, next) => {
         skip     跳过查询的条数
     */
 
-    let pageNo = 1;
-    let pageSize = 2;
-    let qs = url.parse(req.url, true);
+    let pageNo = 1
+    let pageSize = 2
+    let qs = url.parse(req.url, true)
     if (qs.query.pageNo !== '' && qs.query.pageNo !== undefined) {
         pageNo = parseInt(qs.query.pageNo);
     }
@@ -62,33 +62,42 @@ router.get('/user', (req, res, next) => {
 
 // 分类首页
 router.get('/category', (req, res, next) => {
-    let pageNo = 1;
-    let pageSize = 2;
-    let qs = url.parse(req.url, true)
-    if (qs.pageNo !== '' && qs.pageNo !== undefined) {
-        pageNo = qs.pageNo
-    }
-    if (qs.pageSize !== '' && qs.pageSize !== undefined) {
-        pageSize = qs.pageSize
-    }
+    /* 
+        pageNo   当前页数     默认为第1页
+        pageSize 每页显示条数  默认查询1000条
+        skip     跳过查询的条数
+    */
 
-    Category.count().then(count => {
-        let pageTotalNo = Math.ceil(count / pageSize)
-        pageNo = Math.max(pageNo, pageTotalNo)
-        pageNo = Math.min(pageNo, 1)
+   let pageNo = 1
+   let pageSize = 2
+   let qs = url.parse(req.url, true)
+   if (qs.query.pageNo !== '' && qs.query.pageNo !== undefined) {
+       pageNo = parseInt(qs.query.pageNo);
+   }
+   if (qs.query.pageSize !== '' && qs.query.pageSize !== undefined) {
+       pageSize = parseInt(qs.query.pageSize);
+   }
 
-        let skip = (pageNo - 1) * pageSize
-        Category.find().sort({_id: -1}).limit(pageSize).skip(skip).then(categories => {
-            res.render('admin/category.html', {
-                categories,
-                pageNo,
-                pageSize,
-                count,
-                pageTotalNo,
-                url: '/admin/category'
-            })
-        })
-    })
+   Category.count().then(count => {
+       // 总页数
+       let pageTotalNo = Math.ceil(count / pageSize)
+       // 当前页数不能大于总页数
+       pageNo = Math.min(pageNo, pageTotalNo)
+       // 当前页数不能小于1
+       pageNo = Math.max(pageNo, 1)
+
+       let skip = (pageNo - 1) * pageSize
+       Category.find().sort({_id: -1}).limit(pageSize).skip(skip).then(categories => {
+           res.render('admin/category.html', {
+               categories,
+               pageNo,
+               pageSize,
+               count,
+               pageTotalNo,
+               url: '/admin/category'
+           })
+       })
+   })
 })
 
 // 分类添加
@@ -215,20 +224,25 @@ router.get('/category/delete', (req, res, next) => {
 
 // 内容首页
 router.get('/content', (req, res, next) => {
+    /* 
+        pageNo   当前页数     默认为第1页
+        pageSize 每页显示条数  默认查询1000条
+        skip     跳过查询的条数
+    */
     let pageNo = 1;
     let pageSize = 2;
     let qs = url.parse(req.url, true)
-    if (qs.pageNo !== '' && qs.pageNo !== undefined) {
-        pageNo = qs.pageNo
+    if (qs.query.pageNo !== '' && qs.query.pageNo !== undefined) {
+        pageNo = parseInt(qs.query.pageNo)
     }
-    if (qs.pageSize !== '' && qs.pageSize !== undefined) {
-        pageSize = qs.pageSize
+    if (qs.query.pageSize !== '' && qs.query.pageSize !== undefined) {
+        pageSize = parseInt(qs.query.pageSize)
     }
 
     Content.count().then(count => {
         let pageTotalNo = Math.ceil(count / pageSize)
-        pageNo = Math.max(pageNo, pageTotalNo)
-        pageNo = Math.min(pageNo, 1)
+        pageNo = Math.min(pageNo, pageTotalNo)
+        pageNo = Math.max(pageNo, 1)
 
         let skip = (pageNo - 1) * pageSize
         // Content.find().sort({_id: -1}).limit(pageSize).skip(skip).then(contents => {
@@ -255,15 +269,14 @@ router.get('/content', (req, res, next) => {
         //     })(0);
         // })
 
-        Content.find().sort({_id: -1}).limit(pageSize).skip(skip).populate('category').then(contents => {
-            console.log(contents)
-            res.render('admin/Content.html', {
+        Content.find().sort({_id: -1}).limit(pageSize).skip(skip).populate(['category', 'user']).then(contents => {
+            res.render('admin/content.html', {
                 contents,
                 pageNo,
                 pageSize,
                 count,
                 pageTotalNo,
-                url: '/admin/Content'
+                url: '/admin/content'
             })
         })
     })
@@ -294,11 +307,82 @@ router.post('/content/add', (req, res, next) => {
         category: req.body.category,
         title: req.body.title,
         description: req.body.description,
-        content: req.body.content
+        content: req.body.content,
+        user: req.userInfo.id
     }).save().then(content => {
         console.log(content)
         res.render('admin/success.html', {
             successMsg: '内容添加成功',
+            url: '/admin/content'
+        })
+    })
+})
+
+router.get('/content/update', (req, res, next) => {
+    let contentId = req.query.id || ''
+    let categories = []
+    Category.find().then(res => {
+        categories = res
+        console.log(categories)
+
+        return Content.findOne({
+            _id: contentId
+        }).populate('category')
+    }).then(content => {
+        console.log(content)
+        if (!content) {
+            res.render('admin/error.html', {
+                errorMsg: '指定内容不存在'
+            })
+            return Promise.reject()
+        } else {
+            res.render('admin/content_update.html', {
+                categories,
+                content
+            })
+        }
+    })
+})
+
+router.post('/content/update', (req, res, next) => {
+    let contentId = req.query.id || ''
+
+    if (req.body.category === '') {
+        res.render('admin/error.html', {
+            errorMsg: '所属分类不能为空'
+        })
+        return
+    }
+    if (req.body.title === '') {
+        res.render('admin/error.html', {
+            errorMsg: '内容标题不能为空'
+        })
+        return
+    }
+
+    Content.update({
+        _id: contentId
+    } ,{
+        category: req.body.category,
+        title: req.body.title,
+        description: req.body.description,
+        content: req.body.content
+    }).then(() => {
+        res.render('admin/success.html', {
+            successMsg: '更新内容成功',
+            url: '/admin/content'
+        })
+    })
+})
+
+router.get('/content/delete', (req, res, next) => {
+    let id = req.query.id
+
+    Content.remove({
+        _id: id
+    }).then(() => {
+        res.render('admin/success.html', {
+            successMsg: '删除内容成功',
             url: '/admin/content'
         })
     })

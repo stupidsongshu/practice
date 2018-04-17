@@ -17,6 +17,10 @@ html, body {
     margin: 0 10px;
 }
 
+ul, li {
+    list-style: none;
+}
+
 .right-menu {
     width: 300px;
     height: 100%;

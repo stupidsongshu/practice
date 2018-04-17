@@ -13,6 +13,9 @@
         <th>id</th>
         <th>内容名称</th>
         <th>所属分类</th>
+        <th>作者</th>
+        <th>添加时间</th>
+        <th>阅读量</th>
         <th>操作</th>
     </tr>
     {% for content in contents %}
@@ -21,6 +24,9 @@
         <td>{{content.title}}</td>
         <!-- <td>{{content.categoryName}}</td> -->
         <td>{{content.category.name}}</td>
+        <td>{{content.user.username}}</td>
+        <td>{{content.addTime | date('Y-m-d H:i:s', -60*8)}}</td>
+        <td>{{content.views}}</td>
         <td>
             <a href="/admin/content/update?id={{content.id}}">更新</a>
             <a href="/admin/content/delete?id={{content.id}}" onclick="return confirm('确认删除？')">删除</a>

@@ -14,10 +14,37 @@
         <div class="left-container">
             <header>
                 <a class="title" href="/">首页</a>
-                {% for category in categories %}
+                {% for category in data.categories %}
                 <a class="title" href="/">{{category.name}}</a>
                 {% endfor %}
             </header>
+
+            <div class="content">
+                <ul>
+                    {% for content in data.contents %}
+                    <li>
+                        <h1 style="text-align: center;">{{content.title}}</h1>
+                        <div style="text-align: center;">
+                            作者：{{data.user.username}} 时间：{{content.addTime | date('Y-m-d H:i:s', -60*8)}} 阅读：{{content.views}}
+                        </div>
+                        <p>{{content.description}}</p>
+                        <a href="">阅读全文</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                {% if data.pageNo <= 1 %}
+                <span>没有上一页了</span>
+                {% else %}
+                <a href="/?pageNo={{data.pageNo - 1}}">上一页</a>
+                {% endif %}
+
+                {% if data.pageNo >= data.pageTotalNo %}
+                <span>没有下一页了</span>
+                {% else %}
+                <a href="/?pageNo={{data.pageNo + 1}}">下一页</a>
+                {% endif %}
+            </div>
         </div>
 
         <div class="right-menu">
