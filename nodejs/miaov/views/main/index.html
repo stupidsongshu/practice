@@ -1,84 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="/public/css/index.css">
-    <script src="/public/js/jquery.min.js"></script>
-    <script src="/public/js/index.js"></script>
-</head>
-<body>
-    <div class="main">
-        <div class="left-container">
-            <header>
-                <a class="title" href="/">首页</a>
-                {% for category in data.categories %}
-                <a class="title" href="/">{{category.name}}</a>
-                {% endfor %}
-            </header>
+{% extends './layout.html' %}
 
-            <div class="content">
-                <ul>
-                    {% for content in data.contents %}
-                    <li>
-                        <h1 style="text-align: center;">{{content.title}}</h1>
-                        <div style="text-align: center;">
-                            作者：{{data.user.username}} 时间：{{content.addTime | date('Y-m-d H:i:s', -60*8)}} 阅读：{{content.views}}
-                        </div>
-                        <p>{{content.description}}</p>
-                        <a href="">阅读全文</a>
-                    </li>
-                    {% endfor %}
-                </ul>
+{% block content %}
+    <ul>
+        {% for content in data.contents %}
+        <li>
+            <h1 style="text-align: center;">{{content.title}}</h1>
+            <div style="text-align: center;">
+                作者：{{data.user.username}} 时间：{{content.addTime | date('Y-m-d H:i:s', -60*8)}} 阅读：{{content.views}}
+            </div>
+            <p>{{content.description}}</p>
+            <a href="/content?id={{content.id}}">阅读全文</a>
+        </li>
+        {% endfor %}
+    </ul>
 
-                {% if data.pageNo <= 1 %}
-                <span>没有上一页了</span>
-                {% else %}
-                <a href="/?pageNo={{data.pageNo - 1}}">上一页</a>
-                {% endif %}
+    {% if data.pageNo <= 1 %}
+    <span>没有上一页了</span>
+    {% else %}
+    <a href="/?category={{data.categoryId}}&pageNo={{data.pageNo - 1}}">上一页</a>
+    {% endif %}
 
-                {% if data.pageNo >= data.pageTotalNo %}
-                <span>没有下一页了</span>
-                {% else %}
-                <a href="/?pageNo={{data.pageNo + 1}}">下一页</a>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="right-menu">
-            {% if !userInfo.id %}
-            <div id="loginBox">
-                username: <input type="text" class="username"><br>
-                password: <input type="password" class="password"><br>
-                <button class="btn-login">登录</button>
-                <span>没有账号？<a href="javascript:;" class="toggleRegister">立即注册</a></span>
-            </div>
-    
-            <div id="registerBox" style="display: none;">
-                username: <input type="text" class="username"><br>
-                password: <input type="password" class="password"><br>
-                repassword: <input type="password" class="repassword"><br>
-                <button class="btn-register">注册</button>
-                <span>已有账号？<a href="javascript:;" class="toggleLogin">立即登录</a></span>
-            </div>
-    
-            {% else %}
-            <div id="userBox">
-                username: <span class="username">{{userInfo.username}}</span><br>
-                {% if userInfo.isAdmin %}
-                <span class="info">您好，管理员！</span>
-                <a href="/admin">进入后台管理</a>
-                {% else %}
-                <span class="info">您好，欢迎来到我的博客！</span>
-                {% endif %}
-               <button class="logout">退出登录</button>
-            </div>
-            {% endif %}
-    
-            <span class="hint-tip"></span>
-        </div>
-    </div>
-</body>
-</html>
+    {% if data.pageNo >= data.pageTotalNo %}
+    <span>没有下一页了</span>
+    {% else %}
+    <a href="/?category={{data.categoryId}}&pageNo={{data.pageNo + 1}}">下一页</a>
+    {% endif %}
+{% endblock %}

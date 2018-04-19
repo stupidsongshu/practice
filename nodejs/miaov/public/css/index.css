@@ -10,6 +10,15 @@ html, body {
     height: 100%;
 }
 
+a {
+    text-decoration: none;
+}
+
+.active {
+    color: red;
+    border-bottom: 1px solid red;
+}
+
 .left-container header {
     text-align: center;
 }

@@ -1,0 +1,9 @@
+{% extends './layout.html' %}
+
+{% block content %}
+    <h1 style="text-align: center;">{{data.content.title}}</h1>
+    <div style="text-align: center;">
+        作者：{{data.user.username}} 时间：{{data.content.addTime | date('Y-m-d H:i:s', -60*8)}} 阅读：{{data.content.views}}
+    </div>
+    <p>{{data.content.content}}</p>
+{% endblock %}

@@ -4,14 +4,28 @@ const Content = require('../models/Content')
 
 let router = express.Router()
 
-router.get('/', function(req, res, next) {
-    let data = {
-        pageNo: 0,
-        pageSize: 2,
-        pageTotalNo: 0,
+let data = {}
+router.use((req, res, next) => {
+    data = {
         user: req.userInfo,
-        categories: [],
-        contents: []
+        categories: []
+    }
+    Category.find().then(categories => {
+        data.categories = categories
+        next()
+    })
+})
+
+router.get('/', function(req, res, next) {
+    data.pageNo = 1
+    data.pageSize = 2
+    data.pageTotalNo = 0
+    data.categoryId = req.query.category || ''
+    data.contents = []
+
+    let where = {}
+    if (data.categoryId) {
+        where.category = data.categoryId
     }
 
     if (req.query.pageNo !== '' && req.query.pageNo !== undefined) {
@@ -21,23 +35,37 @@ router.get('/', function(req, res, next) {
         data.pageSize = parseInt(req.query.pageSize)
     }
 
-    Category.find().then(categories => {
-        data.categories = categories
-        return Content.count()
-    }).then(count => {
+    Content.where(where).count().then(count => {
         data.pageTotalNo = Math.ceil(count / data.pageSize)
         data.pageNo = Math.min(data.pageNo, data.pageTotalNo)
         data.pageNo = Math.max(data.pageNo, 1)
 
         let skip = (data.pageNo - 1) * data.pageSize
 
-        return Content.find().limit(data.pageSize).skip(skip).sort({
+        return Content.where(where).find().limit(data.pageSize).skip(skip).sort({
             addTime: -1
         })
     }).then(contents => {
         data.contents = contents
         console.log(data)
         res.render('main/index.html', {
+            userInfo: req.userInfo,
+            data
+        })
+    })
+})
+
+router.get('/content', (req, res, next) => {
+    let contentId = req.query.id || ''
+    Content.findOne({
+        _id: contentId
+    }).then(content => {
+        // 内容阅读量
+        content.views++
+        content.save()
+
+        data.content = content
+        res.render('main/content.html', {
             userInfo: req.userInfo,
             data
         })
