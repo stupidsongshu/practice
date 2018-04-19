@@ -65,6 +65,7 @@ router.get('/content', (req, res, next) => {
         content.save()
 
         data.content = content
+        console.log(data)
         res.render('main/content.html', {
             userInfo: req.userInfo,
             data

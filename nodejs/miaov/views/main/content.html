@@ -6,4 +6,29 @@
         作者：{{data.user.username}} 时间：{{data.content.addTime | date('Y-m-d H:i:s', -60*8)}} 阅读：{{data.content.views}}
     </div>
     <p>{{data.content.content}}</p>
+
+    {% if data.user.id %}
+    <input id="contentId" type="hidden" value="{{data.content._id.toString()}}">
+    <h3 id="commentLen">一共<span></span>条评论</h3>
+    <textarea id="comment" name="" id="" cols="30" rows="10"></textarea>
+    <button id="btn-addComment">评论</button>
+    {% else %}
+    <div>评论需登录</div>
+    {% endif %}
+
+    <ul id="commentList"></ul>
+
+    <ul class="pagination">
+        <li class="prev">
+            <a href="">上一页</a>
+        </li>
+        <li>
+            1 / 1
+        </li>
+        <li class="next">
+            <a href="">下一页</a>
+        </li>
+    </ul>
+
+    <script src="/public/js/content.js"></script>
 {% endblock %}

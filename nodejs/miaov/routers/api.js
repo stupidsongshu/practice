@@ -1,5 +1,6 @@
 const express = require('express')
 const User = require('../models/User')
+const Content = require('../models/Content')
 
 let router = express.Router()
 
@@ -98,6 +99,38 @@ router.post('/user/login', (req, res, next) => {
 router.get('/user/logout', (req, res, next) => {
     req.cookies.set('userInfo', null)
     res.json(responseData)
+})
+
+router.get('/comment', (req, res, next) => {
+    let contentId = req.query.contentId || ''
+    console.log(contentId)
+    Content.findOne({
+        _id: contentId
+    }).then(content => {
+        responseData.comments = content.comments
+        res.json(responseData)
+    })
+})
+router.post('/comment/add', (req, res, next) => {
+    let username = req.userInfo.username
+    let contentId = req.body.contentId
+    let commentContent = req.body.comment
+
+    Content.findOne({
+        _id: contentId
+    }).then(content => {
+        let comments = content.comments
+        comments.push({
+            username,
+            commentContent,
+            time: new Date().getTime()
+        })
+        return content.save()
+    }).then(newContent => {
+        responseData.msg = '评论成功'
+        responseData.content = newContent
+        res.json(responseData)
+    })
 })
 
 module.exports = router
