@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="txt">
+    <button id="btn">send</button>
+    <p id="output"></p>
+
+    <script>
+        var txt = document.getElementById('txt')
+        var btn = document.getElementById('btn')
+        var output = document.getElementById('output')
+
+        var ws = new WebSocket('ws://echo.websocket.org')
+        ws.onopen = function() {
+            output.innerHTML = 'websocket is connected'
+        }
+        ws.onclose = function() {
+            output.innerHTML = 'websocket is closed'
+        }
+        ws.onmessage = function(e) {
+            console.log(e)
+            output.innerHTML = e.data
+        }
+        btn.onclick = function() {
+            ws.send(txt.value)
+        }
+    </script>
+</body>
+</html>

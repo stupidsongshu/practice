@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/socket.io/2.1.0/socket.io.js"></script>
+    <!-- <script src="https://cdn.bootcss.com/socket.io/1.3.7/socket.io.js"></script> -->
+</head>
+<body>
+    <input type="text" id="txt">
+    <button id="btn">send</button>
+    <p id="output"></p>
+
+    <script>
+        var txt = document.getElementById('txt')
+        var btn = document.getElementById('btn')
+        var output = document.getElementById('output')
+
+        var socket = io('ws://localhost:8080');
+
+        function showMsg(str, type) {
+            var p = document.createElement('p')
+            p.innerHTML = str
+            if (type === 'enter') {
+                p.style.color = 'blue'
+            } else if (type === 'message') {
+                p.style.color = 'green'
+            } else if (type === 'leave') {
+                p.style.color = 'red'
+            }
+            document.body.appendChild(p)
+        }
+
+        btn.onclick = function() {
+            var text = txt.value
+            if (text) {
+                socket.emit('message', text);
+            }
+        }
+
+        socket.on('enter', function (data) {
+            showMsg(data, 'enter')
+        });
+        socket.on('message', function (data) {
+            showMsg(data, 'message')
+        });
+        socket.on('leave', function (data) {
+            showMsg(data, 'leave')
+        });
+    </script>
+</body>
+</html>

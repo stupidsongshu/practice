@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="txt">
+    <button id="btn">send</button>
+    <p id="output"></p>
+
+    <script>
+        var txt = document.getElementById('txt')
+        var btn = document.getElementById('btn')
+        var output = document.getElementById('output')
+
+        var ws = new WebSocket('ws://localhost:8001/')
+        ws.onopen = function() {
+            output.innerHTML = 'websocket is connected'
+        }
+        ws.onclose = function() {
+            output.innerHTML = 'websocket is closed'
+        }
+        ws.onmessage = function(e) {
+            // output.innerHTML = e.data
+            showMsg(e.data)
+        }
+        btn.onclick = function() {
+            ws.send(txt.value)
+        }
+
+        function showMsg(data) {
+            data = JSON.parse(data)
+            var p = document.createElement('p')
+            p.innerHTML = data.str
+            if (data.type === 'enter') {
+                p.style.color = 'blue'
+            } else if (data.type === 'message') {
+                p.style.color = 'green'
+                p.innerHTML = data.nickname + 'says: ' + data.str
+            } else if (data.type === 'leave') {
+                p.style.color = 'red'
+            }
+            document.body.appendChild(p)
+        }
+    </script>
+</body>
+</html>

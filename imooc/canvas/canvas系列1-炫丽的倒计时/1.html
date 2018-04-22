@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="400" style="border: 1px solid #abcdef">您当前的浏览器不支持canvas，请升级浏览器</canvas>
+
+    <script>
+        var canvas = document.getElementById('canvas')
+        console.log(canvas.getContext('2d'))
+        canvas.width = 1024
+
+        var context = canvas.getContext('2d')
+
+        context.beginPath()
+        context.moveTo(10, 10)
+        context.lineTo(300, 300)
+        context.lineTo(10, 300)
+        context.lineTo(10, 10)
+        context.closePath()
+
+        context.lineWidth = 3
+        context.strokeStyle = 'red'
+
+        context.fillStyle = '#abcdef'
+        // 改变context.stroke() 与 context.fill() 执行顺序，效果不一样
+        context.fill()
+        context.stroke()
+
+        context.beginPath()
+        context.moveTo(30, 10)
+        context.lineTo(320, 300)
+        context.closePath()
+        context.strokeStyle = 'green'
+        context.stroke()
+    </script>
+</body>
+</html>

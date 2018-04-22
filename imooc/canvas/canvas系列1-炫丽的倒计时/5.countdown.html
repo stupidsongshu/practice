@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+<body>
+	<canvas id="canvas">您当前的浏览器不支持canvas，请升级浏览器</canvas>
+
+	<script src="./digit.js"></script>
+	<script>
+		var WINDOW_WIDTH = 1200
+		var WINDOW_HEIGHT = 768
+		var RADIUS = 8
+		var MARGIN_LEFT = 100
+		var MARGIN_TOP = 100
+		// 现在是2018-4-22 22:39:51  倒计时2018-5-1 12:34:56
+		var endTime = new Date(2018, 3, 26, 12, 34, 56)
+
+		var canvas = document.getElementById('canvas')
+		canvas.width = WINDOW_WIDTH
+		canvas.height = WINDOW_HEIGHT
+		var context = canvas.getContext('2d')
+
+		var currShowTimeSeconds = getCurrentShowSeconds()
+		setInterval(function() {
+			render(context)
+			update()
+		}, 50)
+
+		function getCurrentShowSeconds() {
+			var curTime = new Date()
+			var ret = endTime.getTime() - curTime.getTime()
+			ret = Math.round(ret / 1000)
+			return ret > 0 ? ret : 0
+		}
+
+		function update() {
+			var nextShowTimeSeconds = getCurrentShowSeconds()
+
+			var nextHour = parseInt(nextShowTimeSeconds / 3600)
+			var nextMinute = parseInt((nextShowTimeSeconds - nextHour * 3600) / 60)
+			var nextSecond = nextShowTimeSeconds % 60
+
+			var currHour = parseInt(currShowTimeSeconds / 3600)
+			var currMinute = parseInt((currShowTimeSeconds - currHour * 3600) / 60)
+			var currSecond = currShowTimeSeconds % 60
+
+			if (nextSecond !== currSecond) {
+				currShowTimeSeconds = nextShowTimeSeconds
+			}
+		}
+
+		render(context)
+
+		function render(ctx) {
+			var hours = parseInt(currShowTimeSeconds / 3600)
+			var minutes = parseInt((currShowTimeSeconds - hours * 3600) / 60)
+			var seconds = currShowTimeSeconds % 60
+			// console.log(hours, minutes, seconds)
+
+			ctx.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+			renderDigit(MARGIN_LEFT, MARGIN_TOP, parseInt(hours/10), ctx)
+			renderDigit(MARGIN_LEFT + 15 * (RADIUS + 1), MARGIN_TOP, parseInt(hours%10), ctx)
+
+			renderDigit(MARGIN_LEFT + 30 * (RADIUS + 1), MARGIN_TOP, 10, ctx)
+			
+			renderDigit(MARGIN_LEFT + 39 * (RADIUS + 1), MARGIN_TOP, parseInt(minutes/10), ctx)
+			renderDigit(MARGIN_LEFT + 54 * (RADIUS + 1), MARGIN_TOP, parseInt(minutes%10), ctx)
+
+			renderDigit(MARGIN_LEFT + 69 * (RADIUS + 1), MARGIN_TOP, 10, ctx)
+
+			renderDigit(MARGIN_LEFT + 78 * (RADIUS + 1), MARGIN_TOP, parseInt(seconds/10), ctx)
+			renderDigit(MARGIN_LEFT + 93 * (RADIUS + 1), MARGIN_TOP, parseInt(seconds%10), ctx)
+		}
+
+		function renderDigit(x, y, num, ctx) {
+			ctx.fillStyle = '#abcdef'
+			for (var i = 0; i < digit[num].length; i++) {
+				for (var j = 0; j < digit[num][i].length; j++) {
+					if (digit[num][i][j] === 1) {
+						var centerX = x + j * 2 * (RADIUS + 1) + (RADIUS + 1)
+						var centerY = y + i * 2 * (RADIUS + 1) + (RADIUS + 1)
+						ctx.beginPath()
+						ctx.arc(centerX, centerY, RADIUS, 0, 2 * Math.PI)
+						ctx.fill()
+					}
+				}
+			}
+		}
+	</script>
+</body>
+</html>

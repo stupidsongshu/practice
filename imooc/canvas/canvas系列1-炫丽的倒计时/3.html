@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="400" style="border: 1px solid #abcdef">您当前的浏览器不支持canvas，请升级浏览器</canvas>
+
+    <script>
+        var canvas = document.getElementById('canvas')
+        console.log(canvas.getContext('2d'))
+        canvas.width = 1024
+        canvas.height = 800
+
+        var context = canvas.getContext('2d')
+
+        /* 
+         * context.arc(x, y, radius, startAngle, endAngle, anticlockwise)
+         * x 圆心横坐标
+         * y 圆心纵坐标
+         * radius 半径
+         * startAngle 起始弧度
+         * endAngle 终止弧度
+         * anticlockwise 是否逆时针方向 (可选,默认为false,即按照顺时针方向)
+         */
+        context.beginPath()
+        context.arc(50, 50, 30, 0, 1.5*Math.PI)
+        // context.closePath()
+        context.strokeStyle = '#000'
+        context.stroke()
+
+        // closePath() 用于将终点和起点用线段连接起来形成闭合图形
+        context.beginPath();
+        context.arc(120, 50, 30, 0, 0.5*Math.PI, true)
+        context.closePath()
+        context.strokeStyle = '#000'
+        context.stroke()
+
+        // fill() 填充的时候如果图形不是闭合的，会自动连接终点与起点(相当于隐式调用了closePath())
+        context.beginPath();
+        context.arc(200, 50, 30, 0, 0.5*Math.PI, true)
+        // context.closePath() // 填充的时候closePath() 可写可不写
+        context.fillStyle = '#000'
+        context.fill()
+
+        for (var i = 0; i < 10; i++) {
+            context.beginPath()
+            context.arc(50 + i*100, 200, 40, 0, 2*Math.PI*(i+1)/10)
+            // context.closePath()
+            context.stroke()
+        }
+        for (var i = 0; i < 10; i++) {
+            context.beginPath()
+            context.arc(50 + i*100, 300, 40, 0, 2*Math.PI*(i+1)/10)
+            context.closePath()
+            context.stroke()
+        }
+        for (var i = 0; i < 10; i++) {
+            context.beginPath()
+            context.arc(50 + i*100, 400, 40, 0, 2*Math.PI*(i+1)/10)
+            context.fillStyle = '#abcdef'
+            context.fill()
+        }
+
+        for (var i = 0; i < 10; i++) {
+            context.beginPath()
+            context.arc(50 + i*100, 500, 40, 0, 2*Math.PI*(i+1)/10, true)
+            context.stroke()
+        }
+        for (var i = 0; i < 10; i++) {
+            context.beginPath()
+            context.arc(50 + i*100, 600, 40, 0, 2*Math.PI*(i+1)/10, true)
+            context.closePath()
+            context.stroke()
+        }
+        for (var i = 0; i < 10; i++) {
+            context.beginPath()
+            context.arc(50 + i*100, 700, 40, 0, 2*Math.PI*(i+1)/10, true)
+            context.closePath()
+            context.fillStyle = '#abcdef'
+            context.fill()
+        }
+    </script>
+</body>
+</html>

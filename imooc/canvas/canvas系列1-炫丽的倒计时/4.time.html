@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+<body>
+	<canvas id="canvas">您当前的浏览器不支持canvas，请升级浏览器</canvas>
+
+	<script src="./digit.js"></script>
+	<script>
+		var WINDOW_WIDTH = 1200
+		var WINDOW_HEIGHT = 768
+		var RADIUS = 8
+		var MARGIN_LEFT = 100
+		var MARGIN_TOP = 100
+
+		var canvas = document.getElementById('canvas')
+		canvas.width = WINDOW_WIDTH
+		canvas.height = WINDOW_HEIGHT
+		var context = canvas.getContext('2d')
+
+		setInterval(function() {
+			render(context)
+		}, 1000)
+
+		function render(ctx) {
+			var date = new Date()
+			var hours = date.getHours()
+			var minutes = date.getMinutes()
+			var seconds = date.getSeconds()
+
+			ctx.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+			
+
+			renderDigit(MARGIN_LEFT, MARGIN_TOP, parseInt(hours/10), ctx)
+			renderDigit(MARGIN_LEFT + 15 * (RADIUS + 1), MARGIN_TOP, parseInt(hours%10), ctx)
+
+			renderDigit(MARGIN_LEFT + 30 * (RADIUS + 1), MARGIN_TOP, 10, ctx)
+			
+			renderDigit(MARGIN_LEFT + 39 * (RADIUS + 1), MARGIN_TOP, parseInt(minutes/10), ctx)
+			renderDigit(MARGIN_LEFT + 54 * (RADIUS + 1), MARGIN_TOP, parseInt(minutes%10), ctx)
+
+			renderDigit(MARGIN_LEFT + 69 * (RADIUS + 1), MARGIN_TOP, 10, ctx)
+
+			renderDigit(MARGIN_LEFT + 78 * (RADIUS + 1), MARGIN_TOP, parseInt(seconds/10), ctx)
+			renderDigit(MARGIN_LEFT + 93 * (RADIUS + 1), MARGIN_TOP, parseInt(seconds%10), ctx)
+		}
+
+		function renderDigit(x, y, num, ctx) {
+			ctx.fillStyle = '#abcdef'
+			for (var i = 0; i < digit[num].length; i++) {
+				for (var j = 0; j < digit[num][i].length; j++) {
+					if (digit[num][i][j] === 1) {
+						var centerX = x + j * 2 * (RADIUS + 1) + (RADIUS + 1)
+						var centerY = y + i * 2 * (RADIUS + 1) + (RADIUS + 1)
+						ctx.beginPath()
+						ctx.arc(centerX, centerY, RADIUS, 0, 2 * Math.PI)
+						ctx.fill()
+					}
+				}
+			}
+		}
+	</script>
+</body>
+</html>

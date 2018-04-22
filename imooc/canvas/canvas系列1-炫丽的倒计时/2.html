@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+<body>
+	<canvas id="canvas">您当前的浏览器不支持canvas，请升级浏览器</canvas>
+
+	<script>
+		var tangram = [
+			{p: [{x: 0, y: 0},{x: 800, y: 0},{x: 400, y: 400}],color: '#caff67'},
+			{p: [{x: 0, y: 0},{x: 400, y: 400},{x: 0, y: 800}],color: '#67becf'},
+			{p: [{x: 800, y: 0},{x: 800, y: 400},{x: 600, y: 600},{x: 600, y: 200}],color: '#ef3d61'},
+			{p: [{x: 600, y: 200},{x: 600, y: 600},{x: 400, y: 400}],color: '#f9f51a'},
+			{p: [{x: 400, y: 400},{x: 600, y: 600},{x: 400, y: 800},{x: 200, y: 600}],color: '#a594c0'},
+			{p: [{x: 200, y: 600},{x: 400, y: 800},{x: 0, y: 800}],color: '#fa5ecc'},
+			{p: [{x: 800, y: 400},{x: 800, y: 800},{x: 400, y: 800}],color: '#f6ca29'}
+		]
+
+		window.onload = function() {
+			var canvas = document.getElementById('canvas')
+			canvas.width = 800
+			canvas.height = 800
+			var context = canvas.getContext('2d')
+
+			tangram.forEach((item, index) => {
+				draw(item, context)
+			})
+
+			function draw(piece, context) {
+				context.beginPath()
+				context.moveTo(piece.p[0].x, piece.p[0].y)
+
+				piece.p.forEach((path, index, arr) => {
+					let x = arr[index].x
+					let y = arr[index].y
+					if (index > 0) {
+						context.lineTo(x, y)
+					}
+				})
+				// context.lineTo(piece.p[0].x, piece.p[0].y) //可写可不写
+				context.closePath()
+
+				context.fillStyle = piece.color
+
+				context.strokeStyle = '#000'
+				context.lineWidth = 3
+				context.stroke()
+				context.fill()
+			}
+		}
+	</script>
+</body>
+</html>
