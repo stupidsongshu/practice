@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    var canvas = document.getElementById('canvas')
+    var context = canvas.getContext('2d')
+
+    canvas.width = 1200
+    canvas.height = 800
+
+    var R = 300
+    var r = 150
+
+    context.beginPath()
+    for (var i = 0; i < 5; i++) {
+      context.lineTo(
+        Math.cos((18 + 72 * i) / 180 * Math.PI) * R + 400,
+        -Math.sin((18 + 72 * i) / 180 * Math.PI) * R + 400
+      )
+
+      context.lineTo(
+        Math.cos((54 + 72 * i) / 180 * Math.PI) * r + 400,
+        -Math.sin((54 + 72 * i) / 180 * Math.PI) * r + 400
+      )
+    }
+    context.closePath()
+    context.strokeStyle = '#058'
+    context.stroke()
+  </script>
+</body>
+</html>

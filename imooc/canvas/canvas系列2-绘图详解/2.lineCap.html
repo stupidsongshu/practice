@@ -13,7 +13,7 @@
     var canvas = document.getElementById('canvas')
 
     canvas.width = 800
-    canvas.height = 600
+    canvas.height = 400
 
     var context = canvas.getContext('2d')
 
@@ -21,22 +21,22 @@
     context.strokeStyle = '#058'
 
     context.beginPath()
-    context.moveTo(100, 100)
-    context.lineTo(700, 100)
+    context.moveTo(100, 50)
+    context.lineTo(700, 50)
     // context.closePath()
     context.lineCap = 'butt'
     context.stroke()
 
     context.beginPath()
-    context.moveTo(100, 300)
-    context.lineTo(700, 300)
+    context.moveTo(100, 150)
+    context.lineTo(700, 150)
     // context.closePath()
     context.lineCap = 'round'
     context.stroke()
 
     context.beginPath()
-    context.moveTo(100, 500)
-    context.lineTo(700, 500)
+    context.moveTo(100, 250)
+    context.lineTo(700, 250)
     // context.closePath()
     context.lineCap = 'square'
     context.stroke()
@@ -45,10 +45,10 @@
     context.lineWidth = 1
     context.strokeStyle = '#27a'
     context.beginPath()
-    context.moveTo(100, 100)
-    context.lineTo(100, 700)
-    context.moveTo(700, 100)
-    context.lineTo(700, 700)
+    context.moveTo(100, 0)
+    context.lineTo(100, 300)
+    context.moveTo(700, 0)
+    context.lineTo(700, 300)
     context.stroke()
 
     // lineCap只能在线段两端起作用，线段连接处不会起作用

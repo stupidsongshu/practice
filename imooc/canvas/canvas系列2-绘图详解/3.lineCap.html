@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas1" style="display: block;margin: 0 auto;border: 1px solid red;">您的浏览器不支持canvas，请升级或更换浏览器</canvas>
+  <canvas id="canvas2" style="display: block;margin: 0 auto;border: 1px solid green;">您的浏览器不支持canvas，请升级或更换浏览器</canvas>
+  <canvas id="canvas3" style="display: block;margin: 0 auto;border: 1px solid blue;">您的浏览器不支持canvas，请升级或更换浏览器</canvas>
+
+  <script>
+    // 1
+    var canvas1 = document.getElementById('canvas1')
+
+    canvas1.width = 800
+    canvas1.height = 800
+
+    var context = canvas1.getContext('2d')
+
+    context.moveTo(100, 350)
+    context.lineTo(500, 350)
+    context.lineTo(500, 200)
+    context.lineTo(700, 400)
+    context.lineTo(500, 600)
+    context.lineTo(500, 450)
+    context.lineTo(100, 450)
+
+    context.lineCap = 'round'
+
+    context.lineWidth = 10
+    context.strokeStyle = '#058'
+
+    context.stroke()
+
+    // 2
+    var canvas2 = document.getElementById('canvas2')
+
+    canvas2.width = 800
+    canvas2.height = 800
+
+    var context = canvas2.getContext('2d')
+
+    context.moveTo(100, 350)
+    context.lineTo(500, 350)
+    context.lineTo(500, 200)
+    context.lineTo(700, 400)
+    context.lineTo(500, 600)
+    context.lineTo(500, 450)
+    context.lineTo(100, 450)
+    context.lineTo(100, 350) // 首尾没有完全闭合
+
+    context.lineWidth = 10
+    context.strokeStyle = '#058'
+
+    context.stroke()
+
+    // 3
+    var canvas3 = document.getElementById('canvas3')
+
+    canvas3.width = 800
+    canvas3.height = 800
+
+    var context = canvas3.getContext('2d')
+
+    context.moveTo(100, 350)
+    context.lineTo(500, 350)
+    context.lineTo(500, 200)
+    context.lineTo(700, 400)
+    context.lineTo(500, 600)
+    context.lineTo(500, 450)
+    context.lineTo(100, 450)
+    context.lineTo(100, 350) // 首尾没有完全闭合
+
+    context.lineCap = 'square' // 可以通过lineCap修复首尾没有完全闭合的问题，当然推荐最好使用closePath()画闭合多边形
+    context.lineWidth = 10
+    context.strokeStyle = '#058'
+
+    context.stroke()
+  </script>
+</body>
+</html>
