@@ -1,11 +1,12 @@
 const path = require('path')
-const { VueLoaderPlugin } = require('vue-loader')
+// const { VueLoaderPlugin } = require('vue-loader')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
 
 const isDev = process.env.NODE_ENV === 'development'
 
 const config = {
+  target: 'web',
   entry: path.join(__dirname, 'src/index.js'),
   output: {
     filename: 'bundle.js',
@@ -18,6 +19,10 @@ const config = {
         loader: 'vue-loader'
       },
       {
+        test: /\.jsx$/,
+        loader: 'babel-loader'
+      },
+      {
         test: /\.css$/,
         use: [
           'style-loader',
@@ -27,8 +32,15 @@ const config = {
       {
         test: /\.styl$/,
         use: [
-          'style-loader',
+          'vue-style-loader',
+          // 'style-loader',
           'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true
+            }
+          },
           'stylus-loader'
         ]
       },
@@ -51,7 +63,7 @@ const config = {
       "process.env.NODE_ENV": isDev ? '"development"' : '"production"'
     }),
     // make sure to include the plugin for the magic
-    new VueLoaderPlugin(),
+    // new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       template: "./src/index.html"
     })
