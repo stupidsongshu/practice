@@ -1,10 +1,8 @@
 import Vue from 'vue'
 import App from './app.vue'
 
-// import './assets/styles/test.css'
-// import './assets/styles/test.styl'
-// import './assets/images/panda.jpg'
-// import './assets/images/webpack.svg'
+import 'normalize.css'
+import './assets/styles/test.css'
 
 import './assets/styles/global.styl'
 

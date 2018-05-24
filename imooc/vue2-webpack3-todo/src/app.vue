@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div id="cover"></div>
+    <div class="test">测试 extract-text-webpack-plugin</div>
     <v-header></v-header>
     <todo></todo>
     <v-footer></v-footer>

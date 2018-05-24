@@ -1,5 +1,6 @@
 <template>
   <div class="todo">
+    <tabs :filter="filter" :todos="todos" @toggle="toggleEvent" @clearAllCompleted="clearAllCompletedEvent" />
     <input type="text"
       class="add-input"
       autofocus
@@ -13,8 +14,6 @@
       :key="todo.id"
       @del="delEvevnt"
     />
-
-    <tabs :filter="filter" :todos="todos" @toggle="toggleEvent" @clearAllCompleted="clearAllCompletedEvent"></tabs>
   </div>
 </template>
 
