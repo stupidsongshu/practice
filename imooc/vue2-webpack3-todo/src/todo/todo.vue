@@ -6,6 +6,7 @@
       autofocus
       placeholder="请输入"
       @keyup.enter="addTodo"
+      @blur="addTodo"
     >
 
     <item
@@ -45,13 +46,17 @@ export default {
   },
   methods: {
     addTodo(e) {
-      this.todos.unshift({
-        id: id++,
-        completed: false,
-        content: e.target.value.trim()
-      })
+      var todoContent = e.target.value.trim()
 
-      e.target.value = ''
+      if (todoContent !== '') {
+        this.todos.unshift({
+          id: id++,
+          completed: false,
+          content: e.target.value.trim()
+        })
+  
+        e.target.value = ''
+      }
     },
     delEvevnt(data) {
       // 方法一 (循环里面尽量不要splice 因为index会变)

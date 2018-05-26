@@ -9,11 +9,11 @@ const isDev = process.env.NODE_ENV === 'development'
 const config = {
   target: 'web',
   entry: {
-    main: path.join(__dirname, 'src/index.js'),
-    'test': path.join(__dirname, 'src/assets/styles/test.css')
+    app: path.join(__dirname, 'src/index.js'),
+    test: path.join(__dirname, 'src/assets/styles/test.css')
   },
   output: {
-    filename: 'bundle.js',
+    filename: 'bundle.[name].js',
     path: path.join(__dirname, 'dist')
   },
   module: {
@@ -33,7 +33,7 @@ const config = {
             loader: 'url-loader',
             options: {
               limit: 10240,
-              name: '[name]-hello.[ext]'
+              name: 'img/[name].[hash:8].[ext]'
             }
           }
         ]
@@ -48,11 +48,9 @@ const config = {
         NODE_ENV: '"production"'
       }
     }),
-    // make sure to include the plugin for the magic
-    // new VueLoaderPlugin(),
-    new HtmlWebpackPlugin({
-      template: "./src/index.html"
-    })
+  
+    // (vue-loader v15) make sure to include the plugin for the magic
+    // new VueLoaderPlugin()
   ]
 }
 
@@ -104,9 +102,28 @@ if (isDev) { // development 开发环境
     // HMR should never be used in production.
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.NamedModulesPlugin()
+    new webpack.NamedModulesPlugin(),
+
+    new HtmlWebpackPlugin({
+      title: 'Custom template using Handlebars',
+      template: "./src/index.html",
+      filename: 'index.html',
+      chunks: ['app']
+    }),
+    new HtmlWebpackPlugin({
+      template: "./src/test.html",
+      filename: 'test.html',
+      chunks: ['test']
+    })
   )
 } else { // production 生产环境
+  config.entry = {
+    app: path.join(__dirname, 'src/index.js'),
+    test: path.join(__dirname, 'src/assets/styles/test.css'),
+    // 将vue类库单独打包
+    vendor: ['vue'],
+  }
+
   config.output.filename = '[name].[chunkhash:8].js'
 
   // Single Instance
@@ -139,11 +156,15 @@ if (isDev) { // development 开发环境
   const extractCss = new ExtractTextPlugin({
     filename: function(getPath) {
       return getPath('css/[name].[contenthash:8].pure.css').replace('test', 'testChanged')
-    }
+    },
+    // Extract from all additional chunks too (by default it extracts only from the initial chunk(s)) When using CommonsChunkPlugin and there are extracted chunks (from ExtractTextPlugin.extract) in the commons chunk, allChunks must be set to true
+    allChunks: true // 需加上，不然报错 TypeError: __webpack_require__(...) is not a function
   })
   const extractStyl = new ExtractTextPlugin({
-    filename: 'css/[name].[contenthash:8].styl.css'
+    filename: 'css/[name].[contenthash:8].styl.css',
+    allChunks: true
   })
+
   config.module.rules.push(
     {
       test: /\.css$/,
@@ -180,7 +201,35 @@ if (isDev) { // development 开发环境
 
   config.plugins.push(
     extractCss,
-    extractStyl
+    extractStyl,
+
+    new HtmlWebpackPlugin({
+      title: 'Custom template using Handlebars',
+      template: "./src/index.html",
+      filename: 'index.html',
+      excludeChunks: ['test'],
+      // chunks: ['app', 'vendor', 'runtime'],
+      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+      chunksSortMode: 'dependency'
+    }),
+    new HtmlWebpackPlugin({
+      template: "./src/test.html",
+      filename: 'test.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        minifyJS: true,
+        minifyCSS: true
+      },
+      chunks: ['test']
+    }),
+
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor'
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'runtime'
+    })
   )
 }
 
