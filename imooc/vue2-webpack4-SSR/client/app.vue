@@ -1,0 +1,44 @@
+<template>
+  <div id="app">
+    <div id="cover"></div>
+    <v-header></v-header>
+    <todo></todo>
+    <v-footer></v-footer>
+  </div>
+</template>
+
+<script>
+import header from './layout/header.vue'
+import footer from './layout/footer.jsx'
+import todo from './views/todo/todo.vue'
+
+export default {
+  data() {
+    return {
+    }
+  },
+  components: {
+    'v-header': header,
+    'v-footer': footer,
+    todo
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+#app
+  position absolute
+  left 0
+  right 0
+  top 0
+  bottom 0
+#cover
+  position absolute
+  left 0
+  right 0
+  top 0
+  bottom 0
+  background-color #555
+  opacity 0.5
+  z-index -1
+</style>
