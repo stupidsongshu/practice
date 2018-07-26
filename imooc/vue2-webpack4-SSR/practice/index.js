@@ -3,4 +3,5 @@
 // import './computedWatch'
 // import './extend'
 // import './twoWayBinding'
-import './slot'
+// import './slot'
+import './render'
