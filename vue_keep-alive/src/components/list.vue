@@ -21,40 +21,42 @@ export default {
     }
   },
   mounted() {
-    console.log('组件a未缓存')
-    for (var i = 0; i < 50; i++) {
-      this.list.push({
-        id: i,
-        txt: (99*Math.random() - 10*Math.random() + 10).toFixed(0)
-      })
+    console.log('mounted')
+    let indexToListCount = this.$store.state.indexToListCount
+    let listNeedRefresh = this.$store.state.listNeedRefresh
+    if (indexToListCount === 1 && listNeedRefresh) {
+      console.log('mounted init')
+      this.init()
     }
   },
-  // activated() {
-  //   console.log('组件a已缓存')
-  //   console.log('activated', this.$route.meta.keepAlive)
-  // },
+  activated() {
+    console.log('activated')
+    let indexToListCount = this.$store.state.indexToListCount
+    let listNeedRefresh = this.$store.state.listNeedRefresh
+    if (indexToListCount > 1 && listNeedRefresh) {
+      console.log('activated init')
+      let list = this.init()
+    }
+  },
   beforeRouteEnter(to, from, next) {
-    console.log('来源：', from.path)
-    // if (from.name === 'index') {
-    //   next(vm => {
-    //     vm.$route.meta.keepAlive = true
-    //   })
-    // } else {
-    //   next()
-    // }
-
     next(vm => {
-      vm.$route.meta.keepAlive = true
+      if (from.name === 'index') {
+        let indexToListCount = vm.$store.state.indexToListCount
+        indexToListCount++
+        vm.$store.commit('INDEX_TO_LIST_COUNT', indexToListCount)
+      }
     })
   },
-  beforeRouteLeave(to, from, next) {
-    console.log('跳往：', to.path)
-    if (to.name === 'index') {
-      this.$route.meta.keepAlive = false
-    } else {
-      this.$route.meta.keepAlive = true
+  methods: {
+    init() {
+      this.list = []
+      for (var i = 0; i < 50; i++) {
+        this.list.push({
+          id: i,
+          txt: (99*Math.random() - 10*Math.random() + 10).toFixed(0)
+        })
+      }
     }
-    next()
   }
 }
 </script>
