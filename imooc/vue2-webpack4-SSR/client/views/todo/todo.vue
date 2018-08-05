@@ -25,6 +25,7 @@ import tabs from './tabs.vue'
 let id = 0
 
 export default {
+  props: ['id'],
   data() {
     return {
       todos: [],
@@ -43,6 +44,10 @@ export default {
       const completed = this.filter === 'completed'
       return this.todos.filter(todo => todo.completed === completed)
     }
+  },
+  created() {
+    console.log(this.$route)
+    console.log('路由props选项传过来的 id：', this.id)
   },
   methods: {
     addTodo(e) {

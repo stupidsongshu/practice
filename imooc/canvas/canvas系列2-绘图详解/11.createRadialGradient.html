@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <!-- 1 -->
+  <canvas id="canvas1"></canvas>
+  <script>
+    var canvas1 = document.getElementById('canvas1');
+    canvas1.width = 400;
+    canvas1.height = 400;
+
+    var ctx = canvas1.getContext('2d');
+
+    var gradient = ctx.createRadialGradient(200, 200, 0, 200, 200, 200);
+    gradient.addColorStop(0.0, '#fff');
+    gradient.addColorStop(0.25, '#f00');
+    gradient.addColorStop(0.5, '#0f0');
+    gradient.addColorStop(0.75, '#00f');
+    gradient.addColorStop(1.0, '#000');
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 400, 400);
+  </script>
+
+  <!-- 2 -->
+  <canvas id="canvas2"></canvas>
+  <script>
+    var canvas2 = document.getElementById('canvas2');
+    canvas2.width = 400;
+    canvas2.height = 400;
+
+    var ctx = canvas2.getContext('2d');
+
+    var gradient = ctx.createRadialGradient(200, 200, 20, 200, 200, 200);
+    gradient.addColorStop(0.0, '#fff');
+    gradient.addColorStop(0.25, '#f00');
+    gradient.addColorStop(0.5, '#0f0');
+    gradient.addColorStop(0.75, '#00f');
+    gradient.addColorStop(1.0, '#000');
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 400, 400);
+  </script>
+</body>
+</html>

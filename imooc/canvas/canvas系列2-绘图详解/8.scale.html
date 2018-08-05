@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>scale变换的副作用</title>
+</head>
+<body>
+  <p>scale变换的副作用：</p>
+  <p>1.scale变换会影响lineWidth(线宽也进行了缩放)</p>
+  <p>2.scale变换会影响绘制起点位置(左上角坐标也进行了缩放)</p>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = 500;
+    canvas.height = 500;
+
+    var ctx = canvas.getContext('2d');
+
+    ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+    ctx.lineWidth = 5;
+
+    ctx.save();
+    ctx.scale(1, 1);
+    ctx.strokeRect(50, 50, 100, 100);
+    ctx.restore();
+
+    ctx.save();
+    ctx.scale(2, 2);
+    ctx.strokeRect(50, 50, 100, 100);
+    ctx.restore();
+
+    ctx.save();
+    ctx.scale(3, 3);
+    ctx.strokeRect(50, 50, 100, 100);
+    ctx.restore();
+  </script>
+</body>
+</html>

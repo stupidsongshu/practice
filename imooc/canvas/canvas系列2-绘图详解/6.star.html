@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    function drawFiveStar(ctx, r, R, offsetX, offsetY, rotate) {
+      offsetX = offsetX || 0;
+      offsetY = offsetY || 0;
+      rotate = rotate || 0;
+      ctx.beginPath();
+      for (var i = 0; i < 5; i++) {
+        ctx.lineTo(
+          Math.cos((18 + 72 * i - rotate) / 180 * Math.PI) * R + offsetX,
+          -Math.sin((18 + 72 * i - rotate) / 180 * Math.PI) * R + offsetY
+        );
+
+        ctx.lineTo(
+          Math.cos((54 + 72 * i - rotate) / 180 * Math.PI) * r + offsetX,
+          -Math.sin((54 + 72 * i - rotate) / 180 * Math.PI) * r + offsetY
+        )
+      }
+      ctx.closePath();
+
+      ctx.fillStyle = '#fd3';
+      ctx.strokeStyle = '#fd5';
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+  
+      // 通常先填充后描边
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    window.onload = function() {
+      var canvas = document.getElementById('canvas')
+      canvas.width = 800;
+      canvas.height = 800;
+
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (var i = 0; i < 200; i++) {
+        var R = Math.random() * 10 + 10;
+        var offsetX = Math.random() * canvas.width;
+        var offsetY = Math.random() * canvas.height;
+        var rotate = Math.random() * 360
+        drawFiveStar(ctx, R/2, R, offsetX, offsetY, rotate);
+      }
+    }
+  </script>
+</body>
+</html>

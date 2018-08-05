@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    function drawStar(ctx, r, offsetX, offsetY, rotate) {
+      offsetX = offsetX || 0;
+      offsetY = offsetY || 0;
+      rotate = rotate || 0;
+
+      ctx.save();
+
+      ctx.translate(offsetX, offsetY);
+      ctx.rotate(rotate / 180 * Math.PI);
+      ctx.scale(r, r);
+
+      startPath(ctx);
+
+      ctx.fillStyle = '#fd3';
+      // ctx.strokeStyle = '#f00';
+      // ctx.lineWidth = 3;
+      // ctx.lineJoin = 'round';
+      ctx.fill();
+      // ctx.stroke();
+
+      ctx.restore();
+    }
+    function startPath(ctx) {
+      ctx.beginPath();
+      for (var i = 0; i < 5; i++) {
+        ctx.lineTo(
+          Math.cos((18 + 72 * i) / 180 * Math.PI),
+          -Math.sin((18 + 72 * i) / 180 * Math.PI)
+        );
+        ctx.lineTo(
+          Math.cos((54 + 72 * i) / 180 * Math.PI) * 0.5,
+          -Math.sin((54 + 72 * i) / 180 * Math.PI) * 0.5
+        );
+      }
+      ctx.closePath();
+    }
+
+    var canvas = document.getElementById('canvas');
+    canvas.width = 800;
+    canvas.height = 800;
+
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (var i = 0; i < 200; i++) {
+      var offsetX = Math.random() * canvas.width;
+      var offsetY = Math.random() * canvas.height;
+      var r = Math.random() * 10 + 10;
+      var rotate = Math.random() * 360;
+      drawStar(ctx, r, offsetX, offsetY, rotate);
+    }
+  </script>
+</body>
+</html>

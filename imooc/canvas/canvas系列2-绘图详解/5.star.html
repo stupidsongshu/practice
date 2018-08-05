@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    var canvas = document.getElementById('canvas')
+    canvas.width = 400;
+    canvas.height = 400;
+
+    var ctx = canvas.getContext('2d');
+
+    var R = 200;
+    var r = 80; // 改变圆半径大小会导致图形不同
+    
+    ctx.beginPath();
+    for (var i = 0; i < 5; i++) {
+      ctx.lineTo(
+        Math.cos((18 + 72 * i) / 180 * Math.PI) * R + 200,
+        -Math.sin((18 + 72 * i) / 180 * Math.PI) * R + 200
+      );
+
+      ctx.lineTo(
+        Math.cos((54 + 72 * i) / 180 * Math.PI) * r + 200,
+        -Math.sin((54 + 72 * i) / 180 * Math.PI) * r + 200
+      )   
+    }
+    ctx.closePath();
+    ctx.strokeStyle='#f00';
+    ctx.stroke();
+    
+    // 下面为五角星的封装
+    /**
+     * @param {*} ctx canvas content
+     * @param {*} r 小圆半径
+     * @param {*} R 大圆半径
+     * @param {*} offsetX x轴偏移量(canvas绘图基于左上角，所以需要偏移)
+     * @param {*} offsetY y轴偏移量
+     * @param {*} rotate 图形旋转角度(正值顺时针旋转，负值逆时针旋转)
+     */
+    function drawFiveStar(ctx, r, R, offsetX, offsetY, rotate) {
+      offsetX = offsetX || 0;
+      offsetY = offsetY || 0;
+      rotate = rotate || 0;
+      ctx.beginPath();
+      for (var i = 0; i < 5; i++) {
+        ctx.lineTo(
+          Math.cos((18 + 72 * i - rotate) / 180 * Math.PI) * R + offsetX,
+          -Math.sin((18 + 72 * i - rotate) / 180 * Math.PI) * R + offsetY
+        );
+
+        ctx.lineTo(
+          Math.cos((54 + 72 * i - rotate) / 180 * Math.PI) * r + offsetX,
+          -Math.sin((54 + 72 * i - rotate) / 180 * Math.PI) * r + offsetY
+        )   
+      }
+      ctx.closePath();
+    }
+
+    drawFiveStar(ctx, 10, 100, 200, 200, 10)
+    ctx.strokeStyle='#0f0';
+    ctx.lineWidth = 5;
+    /**
+     * lineJoin 属性设置或返回所创建边角的类型，当两条线交汇时。
+     * miter 斜接(默认值)
+     * bevel 斜交
+     * round 圆交
+     */
+    ctx.lineJoin='miter';
+    /**
+     * miterLimit
+     * 正数。规定最大斜接长度，默认值为10
+     * 只有当 lineJoin 属性为 "miter" 时，miterLimit 才有效。
+     * 如果斜接长度超过 miterLimit 的值，边角会以 lineJoin 的 "bevel" 类型来显示。
+     */
+    ctx.miterLimit = 20;
+    ctx.stroke();
+  </script>
+</body>
+</html>

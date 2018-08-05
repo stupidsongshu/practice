@@ -26,7 +26,9 @@ const defaultPlugins = [
   //   // necessary to consistently work with multiple chunks via CommonsChunkPlugin
   //   chunksSortMode: 'dependency'
   // }),
-  new HtmlWebpackPlugin()
+  new HtmlWebpackPlugin({
+    template: path.join(__dirname, 'template.html')
+  })
 ]
 
 const devServer = {
@@ -39,7 +41,12 @@ const devServer = {
     errors: true
   },
   open: true,
-  hot: true
+  hot: true,
+  // https://webpack.docschina.org/configuration/dev-server/#devserver-historyapifallback 当使用 HTML5 History API 时，任意的 404 响应都可能需要被替代为 index.html。
+  historyApiFallback: {
+    // index: '/public/index.html'
+    index: '/index.html'
+  }
 }
 
 if (isDev) { // development 开发环境

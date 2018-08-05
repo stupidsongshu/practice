@@ -2,7 +2,11 @@
   <div id="app">
     <div id="cover"></div>
     <v-header></v-header>
-    <todo></todo>
+    <router-link to="/app/123">todo</router-link>
+    <router-link to="/login" :event="['click', 'mouseleave']">login</router-link>
+    <transition name="fade">
+      <router-view></router-view>
+    </transition>
     <v-footer></v-footer>
   </div>
 </template>
@@ -13,10 +17,6 @@ import footer from './layout/footer.jsx'
 import todo from './views/todo/todo.vue'
 
 export default {
-  data() {
-    return {
-    }
-  },
   components: {
     'v-header': header,
     'v-footer': footer,

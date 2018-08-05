@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    canvas {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <!-- 1.沿对角线渐变 -->
+  <canvas id="canvas1">沿对角线渐变</canvas>
+  <script>
+    var canvas1 = document.getElementById('canvas1');
+    canvas1.width = 400;
+    canvas1.height = 400;
+
+    var ctx = canvas1.getContext('2d');
+
+    var gradient = ctx.createLinearGradient(0, 0, 400, 400);
+    gradient.addColorStop(0.0, '#fff');
+    gradient.addColorStop(0.25, '#f00');
+    gradient.addColorStop(0.5, '#0f0');
+    gradient.addColorStop(0.75, '#00f');
+    gradient.addColorStop(1.0, '#000');
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 400, 400);
+  </script>
+
+  <!-- 2.水平渐变 -->
+  <canvas id="canvas2">水平渐变</canvas>
+  <script>
+    var canvas2 = document.getElementById('canvas2');
+    canvas2.width = 400;
+    canvas2.height = 400;
+
+    var ctx = canvas2.getContext('2d');
+
+    var gradient = ctx.createLinearGradient(0, 0, 400, 0);
+    gradient.addColorStop(0.0, '#fff');
+    gradient.addColorStop(0.25, '#f00');
+    gradient.addColorStop(0.5, '#0f0');
+    gradient.addColorStop(0.75, '#00f');
+    gradient.addColorStop(1.0, '#000');
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 400, 400);
+  </script>
+
+  <!-- 3.垂直渐变 -->
+  <canvas id="canvas3">垂直渐变</canvas>
+  <script>
+    var canvas3 = document.getElementById('canvas3');
+    canvas3.width = 400;
+    canvas3.height = 400;
+
+    var ctx = canvas3.getContext('2d');
+
+    var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0.0, '#fff');
+    gradient.addColorStop(0.25, '#f00');
+    gradient.addColorStop(0.5, '#0f0');
+    gradient.addColorStop(0.75, '#00f');
+    gradient.addColorStop(1.0, '#000');
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 400, 400);
+  </script>
+
+  <!-- 4.渐变范围大于填充区域时，超出的区域渐变颜色自然看不到 -->
+  <canvas id="canvas4"></canvas>
+  <script>
+    var canvas4 = document.getElementById('canvas4');
+    canvas4.width = 400;
+    canvas4.height = 400;
+
+    var ctx = canvas4.getContext('2d');
+
+    var gradient = ctx.createLinearGradient(-100, -100, 500, 500);
+    gradient.addColorStop(0.0, '#fff');
+    gradient.addColorStop(0.25, '#f00');
+    gradient.addColorStop(0.5, '#0f0');
+    gradient.addColorStop(0.75, '#00f');
+    gradient.addColorStop(1.0, '#000');
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 400, 400);
+  </script>
+
+  <!-- 5.渐变范围小于填充区域时，剩下未渐变的颜色取决于最后一个addColorStop指定的颜色 -->
+  <canvas id="canvas5"></canvas>
+  <script>
+    var canvas5 = document.getElementById('canvas5');
+    canvas5.width = 400;
+    canvas5.height = 400;
+
+    var ctx = canvas5.getContext('2d');
+
+    var gradient = ctx.createLinearGradient(0, 0, 200, 200);
+    gradient.addColorStop(0.0, '#fff');
+    gradient.addColorStop(0.25, '#f00');
+    gradient.addColorStop(0.5, '#0f0');
+    gradient.addColorStop(0.75, '#00f');
+    gradient.addColorStop(1.0, '#000');
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 400, 400);
+  </script>
+
+  <!-- 6. -->
+  <canvas id="canvas6"></canvas>
+  <script>
+    var canvas6 = document.getElementById('canvas6');
+    canvas6.width = 400;
+    canvas6.height = 400;
+
+    var ctx = canvas6.getContext('2d');
+
+    var gradient = ctx.createLinearGradient(0, 0, 400, 400);
+    gradient.addColorStop(0.0, '#fff');
+    gradient.addColorStop(0.25, '#f00');
+    gradient.addColorStop(0.5, '#0f0');
+    gradient.addColorStop(0.75, '#00f');
+    gradient.addColorStop(1.0, '#000');
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 200, 200);
+  </script>
+</body>
+</html>
