@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    window.onload = function () {
+      var canvas = document.getElementById('canvas');
+      canvas.width = 800;
+      canvas.height = 800;
+
+      var ctx = canvas.getContext('2d');
+      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+      fillMoon(ctx, 400, 400, 300, 2, 30);
+    }
+
+    // 在坐标(x, y)位置画一个半径为r的正圆弧，以(0, -1),(d, 0),(0, 1)三点为控制点画弧，最终填充为月牙形
+    function fillMoon(ctx, x, y, r, d, /*optional*/deg, /*optional*/fillStyle) {
+      deg = deg || 0;
+      fillStyle = fillStyle || '#fb5';
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(deg / 180 * Math.PI);
+      ctx.scale(r, r);
+
+      pathMoon(ctx, d);
+      ctx.fillStyle = fillStyle;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function pathMoon(ctx, d) {
+      ctx.beginPath();
+      // ctx.arc(0, 0, 1, 0.5 * Math.PI, 1.5 * Math.PI, true);
+      // ctx.moveTo(0, -1);
+      // ctx.arcTo(d, 0, 0, 1, dis(0, -1, d, 0) / d);
+
+      ctx.arc(0, 0, 1, 1.5 * Math.PI, 0.5 * Math.PI);
+      ctx.moveTo(0, 1);
+      ctx.arcTo(d, 0, 0, -1, dis(0, 1, d, 0) / d);
+      ctx.closePath();
+    }
+
+    function dis(x1, y1, x2, y2) {
+      return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+    }
+  </script>
+</body>
+</html>

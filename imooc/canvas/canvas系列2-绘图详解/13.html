@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = 600;
+    canvas.height = 400;
+
+    var ctx = canvas.getContext('2d');
+    ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+    drawRoundRect(ctx, 100, 100, 400, 200, 50);
+
+    /**
+     * @description 在(x, y)处画一个圆角半径为r宽x高y的矩形
+     */
+    function drawRoundRect(ctx, x, y, w, h, r) {
+      ctx.save();
+      ctx.translate(x, x);
+      pathRoundRect(ctx, w, h, r);
+      ctx.strokeStyle = '#abcdef';
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function pathRoundRect(ctx, w, h, r) {
+      ctx.beginPath();
+      ctx.arc(w-r, h-r, r, 0, Math.PI / 2); // 右下角圆弧
+      ctx.lineTo(r, h); // 底部直线
+      ctx.arc(r, h-r, r, Math.PI / 2, Math.PI); // 左下角圆弧
+      ctx.lineTo(0, r); // 左边直线
+      ctx.arc(r, r, r, Math.PI, Math.PI * 3 / 2); // 左上角圆弧
+      ctx.lineTo(w-r, 0); // 上边直线
+      ctx.arc(w-r, r, r, Math.PI * 3 / 2, Math.PI * 2); // 右上角圆弧
+      ctx.closePath(); // closePath闭合路径 -> 右边直线
+    }
+  </script>
+</body>
+</html>

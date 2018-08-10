@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    window.onload = function() {
+      var canvas = document.getElementById('canvas');
+      canvas.width = 800;
+      canvas.height = 800;
+
+      var ctx = canvas.getContext('2d');
+      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+      /**
+       * 以A/B为端点画月牙
+       */
+      var A = {x0: 400, y0: 100};
+      var B = {x2: 400, y2: 700};
+      var C = {x1: 1200, y1: 400};
+      var H = {x: 400, y: 400};
+
+      // 从A点到B点顺时针画四分之一圆弧
+      ctx.beginPath();
+      ctx.arc(H.x, H.y, 300, Math.PI * 3 / 2, Math.PI / 2);
+      ctx.stroke();
+
+      // 以A/B/C三点为控制点画弧
+      ctx.moveTo(A.x0, A.y0);
+      // tanθ = AH/HC = OA/AC
+      // r = OA = AH * AC / HC
+      var AH = dis(A.x0, A.y0, H.x, H.y);
+      var AC = dis(A.x0, A.y0, C.x1, C.y1);
+      var HC = dis(H.x, H.y, C.x1, C.y1);
+      ctx.arcTo(C.x1, C.y1, B.x2, B.y2, AH * AC / HC);
+      ctx.stroke();
+    }
+
+    // 返回两点间(x1, y1)与(x2, y2)的距离
+    function dis(x1, y1, x2, y2) {
+      return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+    }
+  </script>
+</body>
+</html>
