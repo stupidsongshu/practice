@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>文字水平垂直居中</title>
+</head>
+<body>
+  <canvas id="canvas" style="display: block; margin: 50px auto; border: 1px solid #abcdef;"></canvas>
+
+  <script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = 800;
+    canvas.height = 800;
+
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#058';
+    ctx.font = 'bold 120px Arail';
+
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+
+    ctx.fillText('CANVAS', canvas.width / 2, canvas.height / 2);
+    drawBaseline(canvas);
+    // 文本度量 measureText(string)返回一个TextMetrics对象，且该对象目前只有一个width属性，但将来还会增加更多度量属性
+    console.log(ctx.measureText('CANVAS'));
+
+    // 辅助线
+    function drawBaseline(canvas) {
+      ctx.save();
+
+      ctx.moveTo(canvas.width / 2, 0);
+      ctx.lineTo(canvas.width / 2, canvas.height);
+
+      ctx.moveTo(0, canvas.height / 2);
+      ctx.lineTo(canvas.width, canvas.height / 2);
+
+      ctx.strokeStyle = '#999';
+      ctx.stroke();
+
+      ctx.restore();
+    }
+  </script>
+</body>
+</html>

@@ -39,6 +39,7 @@
 
     function pathMoon(ctx, d) {
       ctx.beginPath();
+
       // ctx.arc(0, 0, 1, 0.5 * Math.PI, 1.5 * Math.PI, true);
       // ctx.moveTo(0, -1);
       // ctx.arcTo(d, 0, 0, 1, dis(0, -1, d, 0) / d);
@@ -46,6 +47,7 @@
       ctx.arc(0, 0, 1, 1.5 * Math.PI, 0.5 * Math.PI);
       ctx.moveTo(0, 1);
       ctx.arcTo(d, 0, 0, -1, dis(0, 1, d, 0) / d);
+
       ctx.closePath();
     }
 

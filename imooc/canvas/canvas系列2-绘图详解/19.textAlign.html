@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>canvas textAlign</title>
+</head>
+<body>
+  <canvas id="canvas" style="display: block; margin: 50px auto; border: 1px solid #abcdef;"></canvas>
+
+  <script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = 800;
+    canvas.height = 800;
+
+    var ctx = canvas.getContext('2d');
+
+    /*
+     * 文本对齐方式（水平对齐）textAlign: 'start | left | center | right |end'
+     * 1.对齐的基准线是一条经过给定文本的初始坐标(即contenx.fillText(string, x, y) 中设置的坐标(x, y))且平行canvas左右边界的直线
+     * 2.高程(P451): 建议使用 "start" 和 "end"，不要使用 "left" 和 "right"，因为前两者的意思更稳妥，能同时适合从左到右和从右到左显示（阅读）的语言。
+     */
+
+    var coordinate = {x: 400, y: 100};
+    ctx.font = '30px Arail';
+    ctx.textAlign = 'start';
+    ctx.fillText('textAlign start', 400, 100);
+
+    ctx.textAlign = 'left';
+    ctx.fillText('textAlign left', 400, 200);
+
+    ctx.textAlign = 'center';
+    ctx.fillText('textAlign center', 400, 300);
+
+    ctx.textAlign = 'right';
+    ctx.fillText('textAlign right', 400, 400);
+
+    ctx.textAlign = 'end';
+    ctx.fillText('textAlign end', 400, 500);
+
+    drawBaseline(canvas, ctx, 400, 100);
+
+    // 辅助线
+    function drawBaseline(canvas, ctx, x, y) {
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = '#999';
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvas.height);
+      ctx.stroke();
+    }
+  </script>
+</body>
+</html>

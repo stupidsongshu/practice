@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>绘制文本</title>
+</head>
+<body>
+  <canvas id="canvas" style="display: block; margin: 50px auto; border: 1px solid #abcdef;"></canvas>
+
+  <script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = 800;
+    canvas.height = 800;
+
+    var ctx = canvas.getContext('2d');
+
+    ctx.font='bold 30px Arial';
+    ctx.textAlign = 'start';
+    ctx.textBaseline = 'bottom';
+    var textStyle = ctx.createLinearGradient(0, 0, 500, 0);
+    textStyle.addColorStop(0, '#000');
+    textStyle.addColorStop(0.25, '#f00');
+    textStyle.addColorStop(0.5, '#0f0');
+    textStyle.addColorStop(0.75, '#00f');
+    textStyle.addColorStop(1, '#ff0');
+    ctx.fillStyle = textStyle;
+    /**
+     * fillText(string, x, y, maxlen) strokeText(string, x, y, maxlen)
+     * string: 要绘制的文本字符串
+     * x/y: x坐标/y坐标
+     * maxlen: (可选)最大像素宽度
+     */
+    ctx.fillText('Canvas文本绘制 - fillText！', 40, 100);
+
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = textStyle;
+    ctx.strokeText('Canvas文本绘制 - strokeText！', 40, 200);
+
+    ctx.fillText('Canvas文本绘制 - fillText！', 40, 300, 300);
+    ctx.strokeText('Canvas文本绘制 - strokeText！', 40, 400, 300);
+
+    var img = new Image();
+    img.src = './wall.jpg';
+    img.onload = function() {
+      var pattern = ctx.createPattern(img, 'repeat');
+      ctx.fillStyle = pattern;
+      ctx.font = 'bold 80px Arial';
+      ctx.fillText('Canvas文本绘制！', 40, 500);
+      ctx.strokeText('Canvas文本绘制！', 40, 500);
+    }
+  </script>
+</body>
+</html>

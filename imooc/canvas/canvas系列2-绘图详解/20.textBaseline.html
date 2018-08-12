@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>canvas textBaseline</title>
+</head>
+<body>
+  <canvas id="canvas" style="display: block; margin: 50px auto; border: 1px solid #abcdef;"></canvas>
+
+  <script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = 1900;
+    canvas.height = 800;
+
+    var ctx = canvas.getContext('2d');
+
+    /*
+     * 文本基线（垂直对齐）textBaseline: 'top | hanging | middle | alphabetic | ideographic | bottom'
+     * 1.对齐的基准线是一条经过给定文本的初始坐标(即contenx.fillText(string, x, y) 中设置的坐标(x, y))且平行canvas左右边界的直线
+     * 2.默认值alphabetic,针对拉丁语言；ideographic针对中文日语等方块字；hanging针对印度文字
+     */
+
+    ctx.font = '40px Arail';
+
+    ctx.textBaseline = 'top';
+    ctx.fillText('文本基线textBaseline:top,    abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 0, 100);
+    drawBaseline(ctx, 100);
+
+    ctx.textBaseline = 'middle';
+    ctx.fillText('文本基线textBaseline:middle, abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 0, 200);
+    drawBaseline(ctx, 200);
+
+    ctx.textBaseline = 'bottom';
+    ctx.fillText('文本基线textBaseline:bottom, abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 0, 300);
+    drawBaseline(ctx, 300);
+
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('文本基线textBaseline:alphabetic, abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 0, 400);
+    drawBaseline(ctx, 400);
+
+    ctx.textBaseline = 'ideographic';
+    ctx.fillText('文本基线textBaseline:ideographic, abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 0, 500);
+    drawBaseline(ctx, 500);
+
+    ctx.textBaseline = 'hanging';
+    ctx.fillText('文本基线textBaseline:hanging, abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 0, 600);
+    drawBaseline(ctx, 600);
+
+    // 辅助线
+    function drawBaseline(ctx, y) {
+      var w = ctx.canvas.width;
+      ctx.save();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = '#999';
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+      ctx.restore();
+    }
+  </script>
+</body>
+</html>
