@@ -1,4 +1,0 @@
-#Sat Jul 21 17:43:21 CST 2018
-base.0=E\:\\practice\\weex\\weexCreate\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\5
-path.0=classes.dex
-renamed.0=classes.dex

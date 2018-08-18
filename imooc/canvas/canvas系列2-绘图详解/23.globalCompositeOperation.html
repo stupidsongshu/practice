@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>合成</title>
+  <style>
+    #btns {
+      float: left;
+    }
+    #btns a {
+      display: block;
+    }
+    #canvas {
+      float: left;
+      display: block;
+      margin-left: 50px;
+      border: 1px solid #abcdef;
+    }
+  </style>
+</head>
+<body>
+  <div id="btns">
+    <a href="#">source-over</a>
+    <a href="#">source-atop</a>
+    <a href="#">source-in</a>
+    <a href="#">source-out</a>
+    <a href="#">destination-over</a>
+    <a href="#">destination-atop</a>
+    <a href="#">destination-in</a>
+    <a href="#">destination-out</a>
+    <a href="#">lighter</a>
+    <a href="#">copy</a>
+    <a href="#">xor</a>
+  </div>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    window.onload = function() {
+      draw('source-over');
+
+      var arr = document.getElementsByTagName('a');
+      for (var i = 0; i < arr.length; i++) {
+        arr[i].onclick = function() {
+          draw(this.text);
+          return false;
+        }
+      }
+    }
+
+    function draw(type) {
+      var canvas = document.getElementById('canvas');
+      canvas.width = 1200;
+      canvas.height = 800;
+
+      var ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // title
+      ctx.font = 'bold 30px Arail';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#058';
+      ctx.fillText('globalCompositeOperation = ' + type, canvas.width / 2, 50);
+
+      // rect
+      ctx.fillStyle = '#f00';
+      ctx.fillRect(100, 200, 400, 400);
+
+      // triangle
+      ctx.globalCompositeOperation = type;
+      ctx.fillStyle = '#00f';
+      ctx.beginPath();
+      ctx.moveTo(400, 300);
+      ctx.lineTo(650, 700);
+      ctx.lineTo(150, 700);
+      ctx.closePath();
+      ctx.fill();
+    }
+  </script>
+</body>
+</html>

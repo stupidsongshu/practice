@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas" style="display: block; margin: 50px auto; border: 1px solid #abcdef;"></canvas>
+
+  <script>
+    var searchLight = {
+      x: 400,
+      y: 400,
+      r: 150,
+      rotate: 0,
+      vx: Math.random() * 5 + 10,
+      vy: Math.random() * 5 + 10
+    };
+    var isGrowing = true;
+
+    window.onload = function () {
+      var canvas = document.getElementById('canvas');
+      canvas.width = 800;
+      canvas.height = 800;
+      var ctx = canvas.getContext('2d');
+ 
+      setInterval(function() {
+        draw(ctx);
+        update();
+      }, 50);
+
+      // window.requestAnimationFrame(function() {
+      //   draw(ctx);
+      //   update(ctx);
+      // });
+    }
+
+    function draw(ctx) {
+      var canvas = ctx.canvas;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.beginPath();
+      // ctx.arc(searchLight.x, searchLight.y, searchLight.r, 0, 2 * Math.PI);
+      // 圆形改成自定义的五角星
+      drawStar(ctx, searchLight.r, searchLight.r / 2, searchLight.rotate);
+      ctx.clip();
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+
+      ctx.font = 'bold 150px Arail';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#058';
+      ctx.fillText('CANVAS', canvas.width / 2, canvas.height / 2);
+      ctx.fillText('CANVAS', canvas.width / 2, canvas.height / 2 - 200);
+      ctx.fillText('CANVAS', canvas.width / 2, canvas.height / 2 + 200);
+
+      ctx.restore();
+    }
+
+    function update(ctx) {
+      if (isGrowing) {
+        searchLight.r += 10;
+      } else {
+        searchLight.r -= 10;
+      }
+
+      if (searchLight.r >= 700) {
+        isGrowing = false;
+      }
+      if (searchLight.r <= 200) {
+        isGrowing = true;
+      }
+
+      // window.requestAnimationFrame(function() {
+      //   draw(ctx);
+      //   update(ctx);
+      // });
+    }
+
+    function drawStar(ctx, R, r, rotate) {
+      ctx.save();
+      ctx.translate(searchLight.x, searchLight.y);
+      // ctx.rotate(searchLight.rotate / 180 * Math.PI);
+      for (var i = 0; i < 5; i++) {
+        // searchLight.rotate++;
+        ctx.lineTo(Math.cos((18 + 72 * i) / 180 * Math.PI) * R, -Math.sin((18 + 72 * i) / 180 * Math.PI) * R);
+        ctx.lineTo(Math.cos((54 + 72 * i) / 180 * Math.PI) * r, -Math.sin((54 + 72 * i) / 180 * Math.PI) * r);
+      }
+      ctx.restore();
+    }
+  </script>
+</body>
+</html>

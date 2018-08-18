@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>isPointInPath</title>
+</head>
+<body>
+  <canvas id="canvas" style="display: block; margin: 50px auto; border: 1px solid #abcdef;"></canvas>
+
+  <script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = 800;
+    canvas.height = 800;
+    var ctx = canvas.getContext('2d');
+
+    ctx.globalAlpha = 0.5;
+
+    var balls = [];
+
+    window.onload = function() {
+      for (var i = 0; i < 10; i++) {
+        balls.push({
+          x: range(100, canvas.width - 100),
+          y: range(100, canvas.height - 100),
+          r: Math.random() * 40 + 60
+        });
+      
+      }
+
+      draw();
+
+      canvas.addEventListener('mouseup', detect);
+    }
+
+    function range(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function draw() {
+      for (var i = 0; i < balls.length; i++) {
+        ctx.beginPath();
+        ctx.arc(balls[i].x, balls[i].y, balls[i].r, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.font = 'bold 20px Arail';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#f00';
+        ctx.fillText(i, balls[i].x, balls[i].y);
+      }
+    }
+
+    function detect(e) {
+      console.log(e.target.getBoundingClientRect());
+      var x = e.clientX - e.target.getBoundingClientRect().left;
+      var y = e.clientY - e.target.getBoundingClientRect().top;
+      console.log(x, y);
+      for (var i = 0; i < balls.length; i++) {
+        ctx.beginPath();
+        ctx.arc(balls[i].x, balls[i].y, balls[i].r, 0, 2 * Math.PI);
+        ctx.closePath();
+        if (ctx.isPointInPath(x, y)) {
+          ctx.fillStyle = '#058';
+          ctx.fill();
+        }
+      }
+    }
+  </script>
+</body>
+</html>
