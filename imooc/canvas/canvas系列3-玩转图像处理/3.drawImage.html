@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>在画布中心缩放图像</title>
+  <style>
+    ul {
+      margin: 0;
+    }
+    ul:after {
+      content: '';
+      display: table;
+      height: 0;
+      visibility: hidden;
+      clear: both;
+    }
+    li {
+      float: left;
+      padding: 10px 20px;
+      list-style: none;
+    }
+    li:hover {
+      animation: zoomit 300ms ease-out;
+    }
+    @keyframes zoomit {
+      15% {
+        transform-origin: center center;
+        transform: scale(1.2, 1.1);
+      }
+      40% {
+        transform-origin: center center;
+        transform: scale(0.95, 0.95);
+      }
+      75% {
+        transform-origin: center center;
+        transform: scale(1.05, 1);
+      }
+      100% {
+        transform-origin: center center;
+        transform: scale(1, 1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <ul>
+    <li>
+      <a href="">APPS</a>
+    </li>
+    <li>
+      <a href="">HELP</a>
+    </li>
+    <li>
+      <a href="">CONTACT</a>
+    </li>
+  </ul>
+
+  <canvas id="canvas" style="display: block; margin: 50px auto; border: 1px solid #abcded;">您的浏览器不支持canvas，请升级或者更换浏览器</canvas>
+  <!-- 水印 -->
+  <canvas id="watermark-canvas" style="display: none; margin: 0 auto; border: 1px solid #aaa;">您的浏览器不支持canvas，请升级或者更换浏览器</canvas>
+  <input type="range" id="range" value="1.0" min="0.5" max="2" step="0.01" style="display: block; width: 800px; margin: 20px auto;">
+  <span id="num" style="display: block; width: 800px; margin: 0 auto; text-align: center;"></span>
+  
+  <script>
+    var canvas = document.getElementById('canvas')
+    var ctx = canvas.getContext('2d')
+    var img = new Image()
+
+    var watermarkCanvas = document.getElementById('watermark-canvas')
+    var watermarkCtx = watermarkCanvas.getContext('2d')
+
+    var scale
+    var slider = document.getElementById('range')
+    var num = document.getElementById('num')
+    num.innerHTML = slider.value
+    scale = parseFloat(slider.value)
+
+    window.onload = function() {
+      canvas.width = 800
+      canvas.height = 480
+
+      img.src = './timg.jpeg'
+      img.onload = function() {
+        drawImageByScale(scale)
+
+        // 第一种：监听mousemove事件
+        // var mousedown = false
+        // slider.onmousedown = function() {
+        //   mousedown = true
+        // }
+        // slider.onmouseup = function() {
+        //   mousedown = false
+        // }
+        // slider.onmousemove = function() {
+        //   if (mousedown) {
+        //     scale = parseFloat(this.value)
+        //     num.innerHTML = scale
+
+        //     drawImageByScale(scale)
+        //   }
+        // }
+
+        // 第二种：监听input事件
+        slider.oninput = function() {
+          scale = parseFloat(this.value)
+          num.innerHTML = scale
+
+          drawImageByScale(scale)
+        }
+      }
+
+      // 水印
+      watermarkCanvas.width = 200
+      watermarkCanvas.height = 40
+      watermarkCtx.lineWidth = 2
+      watermarkCtx.strokeStyle = 'rgba(255, 255, 255, .5)'
+      watermarkCtx.strokeRect(0, 0, watermarkCanvas.width, watermarkCanvas.height)
+      watermarkText(watermarkCtx)
+    }
+
+    // 在画布中心缩放图像思路：源图像不改变，改变目标图像绘制的起点与宽高
+    function drawImageByScale(scale) {
+      var sx = 0
+      var sy = 0
+      var sw = img.width
+      var sh = img.height
+
+      var dw = canvas.width * scale
+      var dh = canvas.height * scale
+      var dx = canvas.width / 2 - dw / 2
+      var dy = canvas.height / 2 - dh / 2
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      // ctx.drawImage(img, dx, dy, dw, dh)
+      ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh)
+
+      // 加水印(drawImage第一个参数传入水印画布得canvas对象)
+      ctx.drawImage(watermarkCanvas, canvas.width - watermarkCanvas.width, canvas.height - watermarkCanvas.height)
+      // if (scale >= 1) {
+      //   ctx.drawImage(watermarkCanvas, canvas.width - watermarkCanvas.width, canvas.height - watermarkCanvas.height)
+      // } else {
+      //   ctx.drawImage(watermarkCanvas, dw - watermarkCanvas.width, dh - watermarkCanvas.height)
+      // }
+    }
+
+    function watermarkText(ctx) {
+      var canvas = ctx.canvas
+      // ctx.globalAlpha = 0.5
+      ctx.font = 'bold 20px Arail'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillStyle = 'rgba(255, 255, 255, .5)'
+      ctx.fillText('stupid squirrel', canvas.width / 2, canvas.height / 2)
+    }
+  </script>
+</body>
+</html>

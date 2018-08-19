@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Document</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    canvas {
+      display: block;
+      border: solid 1px grey;
+      margin: 50px auto;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+
+    var canvas = document.getElementById('canvas');
+
+    var cxt = canvas.getContext('2d');
+
+    var image = new Image();
+
+    var image_bak = new Image();
+
+    window.onload = function () {
+
+      canvas.width = 800;
+
+      canvas.height = 400;
+
+      image.src = './timg.jpeg';
+
+      image_bak.src = './timg.jpeg';
+
+      image.onload = function () {
+
+        cxt.drawImage(image, 0, 0);
+
+      }
+
+      clip();
+
+    }
+
+    function clip() {
+
+      canvas.onmousedown = function (event) {
+
+
+
+        event.stopPropagation();
+
+        var downX = event.clientX - canvas.getBoundingClientRect().left;
+
+        var downY = event.clientY - canvas.getBoundingClientRect().top;
+
+
+
+        this.onmousemove = function (e) {
+
+          var curX = e.clientX - canvas.getBoundingClientRect().left;
+
+          var curY = e.clientY - canvas.getBoundingClientRect().top;
+
+
+
+          if (curX - downX < 0 && curY - downY < 0) {
+
+            dx = downX - curX;
+
+            dy = downY - curY;
+
+            drawImage(cxt, image, curX, curY, dx, dy, 500, 0, dx, dy);
+
+          } else {
+
+            drawImage(cxt, image, downX, downY, curX - downX, curY - downY, 500, 0, curX - downX, curY - downY);
+
+          }
+
+          drawRect(cxt, downX, downY, curX - downX, curY - downY)
+
+
+
+          this.onmouseup = function (event) {
+
+            this.onmousemove = null;
+
+          }
+
+
+
+        }
+
+      }
+
+    }
+
+    function drawImage(cxt, obj, sx, sy, dw, dh, dx, dy, dw, dh) {
+
+      cxt.clearRect(0, 0, canvas.width, canvas.height);
+
+      cxt.drawImage(image, 0, 0);
+
+      cxt.drawImage(obj, sx, sy, dw, dh, dx, dy, dw, dh);
+
+    }
+
+    function drawRect(cxt, x, y, w, h) {
+
+      cxt.strokeStyle = 'red';
+
+      cxt.strokeRect(x, y, w, h);
+
+    }
+
+  </script>
+
+</body>
+
+</html>

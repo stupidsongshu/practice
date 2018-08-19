@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>drawImage</title>
+</head>
+<body>
+  <canvas id="canvas1" style="border: 1px solid #abcded;">您的浏览器不支持canvas，请升级或者更换浏览器</canvas>
+  <canvas id="canvas2" style="border: 1px solid #abcded;">您的浏览器不支持canvas，请升级或者更换浏览器</canvas>
+  <canvas id="canvas3" style="border: 1px solid #abcded;">您的浏览器不支持canvas，请升级或者更换浏览器</canvas>
+
+  <script>
+    var canvas1 = document.getElementById('canvas1')
+    var canvas2 = document.getElementById('canvas2')
+    var canvas3 = document.getElementById('canvas3')
+    var ctx1 = canvas1.getContext('2d')
+    var ctx2 = canvas2.getContext('2d')
+    var ctx3 = canvas3.getContext('2d')
+    var img = new Image()
+
+    window.onload = function() {
+      canvas1.width = 800
+      canvas1.height = 480
+
+      canvas2.width = 800
+      canvas2.height = 800
+
+      canvas3.width = 800
+      canvas3.height = 480
+
+      img.src = './timg.jpeg'
+      img.onload = function() {
+        // 3个参数 drawImage(image|canvas, dx, dy)
+        ctx1.drawImage(img, 0, 0)
+        // 5个参数 drawImage(image|canvas, dx, dy, dw, dh)
+        ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height)
+        // 9个参数 drawImage(image|canvas, sx, sy, sw, sh, dx, dy, dw, dh)
+        ctx3.drawImage(img, 100, 0, 600, 400, 0, 0, 800, 480)
+      }
+    }
+  </script>
+</body>
+</html>
