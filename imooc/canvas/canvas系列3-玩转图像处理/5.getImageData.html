@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    canvas {
+      border: 1px solid #999;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas1" width="800" height="400"></canvas>
+  <canvas id="canvas2" width="800" height="400"></canvas>
+  <canvas id="canvas3" width="800" height="400"></canvas>
+  <canvas id="canvas4" width="800" height="400"></canvas>
+  <canvas id="canvas5" width="800" height="400"></canvas>
+
+  <script>
+    var canvas1 = document.getElementById('canvas1')
+    var canvas2 = document.getElementById('canvas2')
+    var canvas3 = document.getElementById('canvas3')
+    var canvas4 = document.getElementById('canvas4')
+    var canvas5 = document.getElementById('canvas5')
+
+    var ctx1 = canvas1.getContext('2d')
+    var ctx2 = canvas2.getContext('2d')
+    var ctx3 = canvas3.getContext('2d')
+    var ctx4 = canvas4.getContext('2d')
+    var ctx5 = canvas5.getContext('2d')
+
+    var img = new Image()
+
+    window.onload = function() {
+      img.src = './timg.jpeg'
+      img.onload = function() {
+        ctx1.drawImage(img, 0, 0, canvas1.width, canvas1.height)
+        var imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height)
+        console.log(imageData)
+        console.time()
+        handle(imageData)
+        console.timeEnd()
+      }
+    }
+
+    function handle(imageData) {
+      var data = imageData.data
+      var red, green, blue, alpha, avarage
+      for (var i = 0, len = data.length; i < len; i += 4) {
+        red = data[i]
+        green = data[i+1]
+        blue = data[i+2]
+        alpha = data[i+3]
+
+        avarage = Math.floor((red + green + blue) / 3)
+
+        data[i] = avarage
+        data[i+1] = avarage
+        data[i+2] = avarage
+      }
+      ctx2.putImageData(imageData, 0, 0, 0, 0, canvas2.width, canvas2.height)
+      ctx3.putImageData(imageData, 50, 50, 0, 0, canvas3.width - 50, canvas3.height - 50)
+      ctx4.putImageData(imageData, 0, 0, 50, 50, canvas4.width - 100, canvas4.height - 100)
+      ctx5.putImageData(imageData, 50, 50, 50, 50, canvas5.width - 100, canvas5.height - 100)
+    }
+  </script>
+</body>
+</html>
