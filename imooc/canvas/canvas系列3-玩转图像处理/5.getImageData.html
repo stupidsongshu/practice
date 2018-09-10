@@ -48,6 +48,11 @@
     function handle(imageData) {
       var data = imageData.data
       var red, green, blue, alpha, avarage
+      console.log(img.width, img.height)
+      console.log(canvas1.width, canvas1.height)
+      console.log(canvas1.width * canvas1.height)
+      console.log(canvas1.width * canvas1.height * 4)
+      console.log(data.length)
       for (var i = 0, len = data.length; i < len; i += 4) {
         red = data[i]
         green = data[i+1]

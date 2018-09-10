@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <canvas id="canvas1" style="border: 1px solid #999;"></canvas>
+  <canvas id="canvas2" style="border: 1px solid #999;"></canvas>
+  <canvas id="canvas3" style="border: 1px solid #999;"></canvas>
+  <canvas id="canvas4" style="border: 1px solid #999;"></canvas>
+
+  <button id="filter">filter</button>
+
+  <script>
+    var canvas = document.getElementById('canvas')
+    var ctx = canvas.getContext('2d')
+
+    var canvas1 = document.getElementById('canvas1')
+    var ctx1 = canvas1.getContext('2d')
+
+    var canvas2 = document.getElementById('canvas2')
+    var ctx2 = canvas2.getContext('2d')
+
+    var canvas3 = document.getElementById('canvas3')
+    var ctx3 = canvas3.getContext('2d')
+
+    var canvas4 = document.getElementById('canvas4')
+    var ctx4 = canvas4.getContext('2d')
+
+    var img = new Image()
+    var imageData
+
+    window.onload = function() {
+      img.src = './autumn.jpg'
+      img.onload = function() {
+        canvas.width = img.width
+        canvas.height = img.height
+
+        canvas1.width = img.width
+        canvas1.height = img.height
+
+        canvas2.width = img.width
+        canvas2.height = img.height
+
+        canvas3.width = img.width
+        canvas3.height = img.height
+
+        canvas4.width = img.width
+        canvas4.height = img.height
+
+        ctx.drawImage(img, 0, 0)
+      }
+    }
+
+    function filter1() {
+      var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      var data = imageData.data
+
+      // 第一种：第i行第j列
+      for (var i = 0; i < canvas.height; i++) {
+        for (var j = 0; j < canvas.width; j++) {
+          var k = i * canvas.width + j
+          data[4 * k] = 0
+          data[4 * k + 3] = data[4 * k + 3] * .8
+        }
+      }
+
+      ctx1.putImageData(imageData, 0, 0, 0, 0, canvas1.width, canvas1.height)
+    }
+
+    function filter2() {
+      var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      var data = imageData.data
+
+      // 第二种：
+      for (var i = 0; i < canvas.width * canvas.height; i++) {
+        data[4 * i] = 0
+        data[4 * i + 3] = data[4 * i + 3] * .8
+      }
+
+      ctx2.putImageData(imageData, 0, 0, 0, 0, canvas2.width, canvas2.height)
+    }
+
+    function filter3() {
+      var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      var data = imageData.data
+
+      // 第三种：
+      for (var i = 0, len = data.length; i < len; i++) {
+        data[4 * i] = 0
+        data[4 * i + 3] = data[4 * i + 3] * .8
+      }
+
+      ctx3.putImageData(imageData, 0, 0, 0, 0, canvas3.width, canvas3.height)
+    }
+
+    function filter4() {
+      var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      var data = imageData.data
+
+      // 第四种：(同第三种)
+      for (var i = 0, len = data.length; i < len; i+=4) {
+        data[i] = 0
+        data[i + 3] = data[i + 3] * .8
+      }
+
+      ctx4.putImageData(imageData, 0, 0, 0, 0, canvas4.width, canvas4.height)
+    }
+
+    document.getElementById('filter').addEventListener('click', function() {
+      filter1()
+      filter2()
+      filter3()
+      filter4()
+    })
+  </script>
+</body>
+</html>
