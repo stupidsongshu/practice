@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas1"></canvas>
+  <canvas id="canvas2" style="border: 1px solid #666;"></canvas>
+
+  <div>
+    <a href="javascript:grey();">grey</a>
+    <a href="javascript:black();">black</a>
+    <a href="javascript:reverse();">reverse</a>
+    <a href="javascript:blur(2);">blur</a>
+    <a href="javascript:mosaic(16);">mosaic</a>
+    <a href="javascript:mosaic1(16);">mosaic1</a>
+    <a href="javascript:mosaic2(16);">mosaic2</a>
+    <a href="javascript:mosaic3(7);">mosaic3</a>
+  </div>
+
+  <script>
+    var canvas1 = document.getElementById('canvas1')
+    var canvas2 = document.getElementById('canvas2')
+
+    var ctx1 = canvas1.getContext('2d')
+    var ctx2 = canvas2.getContext('2d')
+
+    var img = new Image()
+
+    window.onload = function() {
+      img.src = './autumn.jpg'
+
+      img.onload = function() {
+        canvas1.width = img.width
+        canvas1.height = img.height
+
+        canvas2.width = img.width
+        canvas2.height = img.height
+
+        ctx1.drawImage(img, 0, 0)
+      }
+    }
+
+    function grey() {
+      var imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height)
+      var data = imageData.data
+
+      for (var i = 0; i < canvas1.width * canvas1.height; i++) {
+        var r = data[4 * i]
+        var g = data[4 * i + 1]
+        var b = data[4 * i + 2]
+
+        var greyValue = r * 0.3 + g * 0.59 + b * 0.11
+
+        data[4 * i] = greyValue
+        data[4 * i + 1] = greyValue
+        data[4 * i + 2] = greyValue
+      }
+
+      ctx2.putImageData(imageData, 0, 0, 0, 0, canvas2.width, canvas2.height)
+    }
+
+    function black() {
+      var imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height)
+      var data = imageData.data
+
+      for (var i = 0; i < canvas1.height; i++) {
+        for (var j = 0; j < canvas1.width; j++) {
+          var k = i * canvas1.width + j
+          var r = data[4 * k]
+          var g = data[4 * k + 1]
+          var b = data[4 * k + 2]
+
+          var greyValue = r * 0.3 + g * 0.59 + b * 0.11
+
+          if (greyValue > 255 / 2) {
+            greyValue = 255
+          } else {
+            greyValue = 0
+          }
+
+          data[4 * k] = greyValue
+          data[4 * k + 1] = greyValue
+          data[4 * k + 2] = greyValue
+        }
+      }
+
+      ctx2.putImageData(imageData, 0, 0)
+    }
+
+    function reverse() {
+      var imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height)
+      var data = imageData.data
+
+      for (var i = 0, len = data.length; i < len; i += 4) {
+        data[i] = 255 - data[i]
+        data[i + 1] = 255 - data[i + 1]
+        data[i + 2] = 255 - data[i + 2]
+      }
+
+      ctx2.putImageData(imageData, 0, 0)
+    }
+
+    // 模糊滤镜：以某个像素点为中心，用给定半径的周围像素块的颜色平均值再赋值给周围像素块的每个像素点
+    function blur(blurR) {
+      var sourceImageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+      var sourceData = sourceImageData.data;
+
+      var imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+      var data = imageData.data;
+
+      // 模糊半径
+      blurR = blurR || 1;
+      // 模糊正方形总个数
+      var totalBlur = (2 * blurR + 1) * (2 * blurR + 1);
+
+      for (var i = blurR; i < canvas1.height - blurR; i++) {
+        for (var j = blurR; j < canvas1.width - blurR; j++) {
+
+          var totalR = 0, totalG = 0, totalB = 0;
+          for (var dx = -blurR; dx <= blurR; dx++) {
+            for (var dy = -blurR; dy <= blurR; dy++) {
+              // 坐标点(x, y)的像素
+              var x = i + dx;
+              var y = j + dy;
+
+              var p = x * canvas1.width + y;
+              totalR += sourceData[4 * p + 0];
+              totalG += sourceData[4 * p + 1];
+              totalB += sourceData[4 * p + 2];
+            }
+          }
+
+          var k = i * canvas1.width + j;
+          data[4 * k + 0] = totalR / totalBlur;
+          data[4 * k + 1] = totalG / totalBlur;
+          data[4 * k + 2] = totalB / totalBlur;
+        }
+      }
+
+      ctx2.putImageData(imageData, 0, 0, 0, 0, canvas2.width, canvas2.height);
+    }
+
+    // 马赛克滤镜：以某个像素点为起始点，将给定的周围像素块里面的每个像素点颜色赋值为同一个色值(注意外层循环条件变量步长)
+    function mosaic(size) {
+      var sourceImageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+      var sourceData = sourceImageData.data;
+
+      var imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+      var data = imageData.data;
+
+      // 马赛克块的宽/高(默认正方形块)
+      size = size || 16;
+
+      for (var i = 0; i < canvas1.height; i += size) { // 注意外层循环条件变量步长
+        for (var j = 0; j < canvas1.width; j += size) { // 注意外层循环条件变量步长
+
+          var totalR = 0, totalG = 0, totalB = 0;
+          for (var dx = 0; dx < size; dx++) {
+            for (var dy = 0; dy < size; dy++) {
+              var x = i + dx;
+              var y = j + dy;
+              var p = x * canvas1.width + y;
+
+              totalR += sourceData[4 * p + 0];
+              totalG += sourceData[4 * p + 1];
+              totalB += sourceData[4 * p + 2];
+            }
+          }
+
+          for (var dx = 0; dx < size; dx++) {
+            for (var dy = 0; dy < size; dy++) {
+              var x = i + dx;
+              var y = j + dy;
+              var p = x * canvas1.width + y;
+              // 使用某个像素点周围的像素块的颜色平均值
+              data[4 * p + 0] = totalR / (size * size);
+              data[4 * p + 1] = totalG / (size * size);
+              data[4 * p + 2] = totalB / (size * size);
+            }
+          }
+
+        }
+      }
+
+      ctx2.putImageData(imageData, 0, 0);
+    }
+
+    function mosaic1(size) {
+      var sourceImageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+      var sourceData = sourceImageData.data;
+
+      var imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+      var data = imageData.data;
+
+      // 马赛克块的宽/高(默认正方形块)
+      size = size || 16;
+
+      for (var i = 0; i < canvas1.height; i += size) {
+        for (var j = 0; j < canvas1.width; j += size) {
+          var p = i * canvas1.width + j;
+          var r = sourceData[4 * p + 0];
+          var g = sourceData[4 * p + 1];
+          var b = sourceData[4 * p + 2];
+
+          // 像素块颜色值取像素块左上角第一个点颜色值
+          for (var dx = 0; dx < size; dx++) {
+            for (var dy = 0; dy < size; dy++) {
+              var x = i + dx;
+              var y = j + dy;
+              var p = x * canvas1.width + y;
+
+              data[4 * p + 0] = r;
+              data[4 * p + 1] = g;
+              data[4 * p + 2] = b;
+            }
+          }
+        }
+      }
+
+      ctx2.putImageData(imageData, 0, 0);
+    }
+
+    function mosaic2(size) {
+      var sourceImageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+      var sourceData = sourceImageData.data;
+
+      var imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+      var data = imageData.data;
+
+      // 马赛克块的宽/高(默认正方形块)
+      size = size || 16;
+
+      for (var i = 0; i < canvas1.height; i += size) {
+        for (var j = 0; j < canvas1.width; j += size) {
+          var p = i * canvas1.width + j;
+          var r = sourceData[4 * p + 0];
+          var g = sourceData[4 * p + 1];
+          var b = sourceData[4 * p + 2];
+
+          // 像素块颜色值取像素块中心点颜色值
+          for (var dx = - size / 2; dx < size / 2; dx++) { // 注意size需是偶数
+            for (var dy = - size / 2; dy < size / 2; dy++) {
+              var x = i + dx;
+              var y = j + dy;
+              var p = x * canvas1.width + y;
+
+              data[4 * p + 0] = r;
+              data[4 * p + 1] = g;
+              data[4 * p + 2] = b;
+            }
+          }
+        }
+      }
+
+      ctx2.putImageData(imageData, 0, 0);
+    }
+
+    function mosaic3(mosaicR) {
+      var imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+      var data = imageData.data;
+
+      // 马赛克半径(缺点是马赛克块宽高都只能是奇数)
+      mosaicR = mosaicR || 1;
+      var step = 2 * mosaicR + 1;
+      for (var i = 0; i < canvas1.height; i += step) {
+        for (var j = 0; j < canvas1.width; j += step) {
+          var p = i * canvas1.width + j;
+          var r = data[4 * p + 0];
+          var g = data[4 * p + 1];
+          var b = data[4 * p + 2];
+
+          // 像素块颜色值取像素块中心点颜色值
+          for (var dx = -mosaicR; dx <= mosaicR; dx++) {
+            for (var dy = -mosaicR; dy <= mosaicR; dy++) {
+              var x = i + dx;
+              var y = j + dy;
+              var p = x * canvas1.width + y;
+
+              data[4 * p + 0] = r;
+              data[4 * p + 1] = g;
+              data[4 * p + 2] = b;
+            }
+          }
+        }
+      }
+
+      ctx2.putImageData(imageData, 0, 0);
+    }
+  </script>
+</body>
+</html>
