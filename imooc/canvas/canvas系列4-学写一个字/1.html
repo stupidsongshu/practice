@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    if(!('flex' in document.documentElement.style) && !navigator.userAgent.match(/spider|googlebot|bingbot|geekbang|yahoo! Slurp/i)){
+      window.location.href = 'https://static001.geekbang.org/static/common/browser_update/index.html'
+    }
+  </script>
+
+  <script>
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    var isMouseDown = false;
+    var lastLocation = {x: 0, y: 0};
+    var lastTimestamp = 0;
+
+    window.onload = function() {
+      canvas.width = 800;
+      canvas.height = 800;
+
+      drawGraid();
+    }
+
+    function drawGraid() {
+      ctx.save();
+
+      ctx.strokeStyle = 'rgb(230, 11, 9)';
+
+      ctx.beginPath();
+      // ctx.moveTo(0, 0);
+      // ctx.rect(0, 0, canvas.width, canvas.height);
+      ctx.moveTo(3, 3);
+      ctx.lineTo(canvas.width - 3, 3);
+      ctx.lineTo(canvas.width - 3, canvas.height - 3);
+      ctx.lineTo(3, canvas.height - 3);
+      ctx.closePath();
+      ctx.lineWidth = 6;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(canvas.width, canvas.height);
+
+      ctx.moveTo(0, canvas.height);
+      ctx.lineTo(canvas.width, 0);
+
+      ctx.moveTo(0, canvas.height / 2);
+      ctx.lineTo(canvas.width, canvas.height / 2);
+
+      ctx.moveTo(canvas.width / 2, 0);
+      ctx.lineTo(canvas.width / 2, canvas.height);
+
+      ctx.lineWidth = 1;
+      ctx.setLineDash([5, 10]);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    // 坐标转换
+    function windowToCanvas(e) {
+      var domRect = e.target.getBoundingClientRect();
+      return {
+        x: e.clientX - domRect.x,
+        y: e.clientY - domRect.y
+      }
+    }
+
+    // 两点间距离
+    function calcDistance(loc1, loc2) {
+      return Math.sqrt((loc1.x - loc2.x) * (loc1.x - loc2.x) + (loc1.y - loc2.y) * (loc1.y - loc2.y));
+    }
+
+    // 根据时间/距离计算画笔粗细(速度越快画笔越细，反之越粗)
+    function calcLineWidth(t, s) {
+      var minLineWidth = 10;
+      var maxLineWidth = 30;
+
+    }
+
+    canvas.onmousedown = function(e) {
+      e.preventDefault();
+
+      isMouseDown = true;
+
+      lastLocation = windowToCanvas(e);
+      lastTimestamp = new Date().getTime();
+    }
+    canvas.onmouseup = function(e) {
+      e.preventDefault();
+
+      isMouseDown = false;
+    }
+    canvas.onmouseout = function(e) {
+      e.preventDefault();
+
+      isMouseDown = false;
+    }
+    canvas.onmousemove = function(e) {
+      e.preventDefault();
+
+      if (isMouseDown) {
+        var currentLocation = windowToCanvas(e);
+        var currentTimestamp = new Date().getTime();
+
+        var s = calcDistance(lastLocation, currentLocation);
+        var t = currentTimestamp - lastTimestamp;
+
+        var lineWidth = calcLineWidth(t, s);
+
+        drawLine(lastLocation, currentLocation, lineWidth);
+
+        lastLocation = currentLocation;
+        lastTimestamp = currentTimestamp;
+      }
+    }
+
+    function drawLine(lastLocation, currentLocation, lineWidth) {
+      ctx.beginPath();
+      ctx.moveTo(lastLocation.x, lastLocation.y);
+      ctx.lineTo(currentLocation.x, currentLocation.y);
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = lineWidth;
+      // 解决粗线条断裂的现象
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+    }
+  </script>
+
+  <script>
+    function *calculate(a, b) {
+      let sum = a + b;
+      yield console.log(sum);
+      let sub = a - b;
+      yield console.log(sub);
+    }
+    var gen = calculate(3, 4);
+    console.log(gen);
+    gen.next();
+    gen.next();
+
+    async function test() {
+      // return 'hello world';
+      var str = await setTimeout(_ => {
+        console.log(123);
+      }, 3000);
+      return str;
+    }
+    // console.log(test);
+    // console.log(test());
+    test().then(res => {
+      console.log(res);
+    })
+  </script>
+</body>
+</html>
