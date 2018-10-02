@@ -2,18 +2,92 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>学写一个字</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
     canvas {
       display: block;
       margin: 0 auto;
+    }
+    #controller {
+      /* width: 800px; */
+      margin: 0 auto;
+    }
+    .clearfix {
+      clear: both;
+    }
+    .op_btn {
+      float: right;
+      margin: 10px 0 0 10px;
+      border: 2px solid #aaa;
+      width: 80px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 20px;
+      text-align: center;
+      border-radius: 5px 5px;
+      cursor: pointer;
+      background-color: #fff;
+      font-weight: bold;
+      font-family: 'Microsoft Yahei, Arial';
+    }
+    .op_btn:hover {
+      background-color: #def;
+    }
+    .color_btn {
+      float: left;
+      margin: 10px 10px 0 0;
+      border: 5px solid #fff;
+      width: 40px;
+      height: 40px;
+      border-radius: 5px 5px;
+      cursor: pointer;
+    }
+    .color_btn:hover {
+      border: 5px solid violet;
+    }
+    .color_btn_selected {
+      border: 5px solid blueviolet;
+    }
+    #black_btn {
+      background-color: black;
+    }
+    #blue_btn {
+      background-color: blue;
+    }
+    #green_btn {
+      background-color: green;
+    }
+    #red_btn {
+      background-color: red;
+    }
+    #orange_btn {
+      background-color: orange;
+    }
+    #yellow_btn {
+      background-color: yellow;
     }
   </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
+  <div id="controller">
+    <div id="black_btn" class="color_btn color_btn_selected a"></div>
+    <div id="blue_btn" class="color_btn b"></div>
+    <div id="green_btn" class="color_btn"></div>
+    <div id="red_btn" class="color_btn"></div>
+    <div id="orange_btn" class="color_btn"></div>
+    <div id="yellow_btn" class="color_btn"></div>
+
+    <div id="clear_btn" class="op_btn">清除</div>
+
+    <div class="clearfix"></div>
+  </div>
 
   <script>
     if(!('flex' in document.documentElement.style) && !navigator.userAgent.match(/spider|googlebot|bingbot|geekbang|yahoo! Slurp/i)){
@@ -28,12 +102,27 @@
     var isMouseDown = false;
     var lastLocation = {x: 0, y: 0};
     var lastTimestamp = 0;
+    var lastLineWidth = -1;
+
+    var minLineWidth = 10;
+    var maxLineWidth = 30;
+    var minV = 0.1; // 运笔最小速度
+    var maxV = 10; // 运笔最大速度
+    var strokeColor = 'black';
 
     window.onload = function() {
-      canvas.width = 800;
-      canvas.height = 800;
+      // canvas.width = 800;
+      canvas.width = Math.min(800, document.documentElement.clientWidth - 20);
+      canvas.height = canvas.width;
+
+      document.getElementById('controller').style.width = canvas.width + 'px';
 
       drawGraid();
+
+      document.getElementById('clear_btn').addEventListener('click', function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawGraid();
+      });
     }
 
     function drawGraid() {
@@ -73,11 +162,17 @@
     }
 
     // 坐标转换
-    function windowToCanvas(e) {
-      var domRect = e.target.getBoundingClientRect();
+    function windowToCanvas(point) {
+      // var domRect = e.target.getBoundingClientRect();
+      // return {
+      //   x: e.clientX - domRect.x,
+      //   y: e.clientY - domRect.y
+      // }
+
+      var domRect = canvas.getBoundingClientRect();
       return {
-        x: e.clientX - domRect.x,
-        y: e.clientY - domRect.y
+        x: point.x - domRect.x,
+        y: point.y - domRect.y
       }
     }
 
@@ -86,61 +181,187 @@
       return Math.sqrt((loc1.x - loc2.x) * (loc1.x - loc2.x) + (loc1.y - loc2.y) * (loc1.y - loc2.y));
     }
 
-    // 根据时间/距离计算画笔粗细(速度越快画笔越细，反之越粗)
+    // 根据时间与距离(运笔速度)计算画笔粗细(速度越快画笔越细，反之越粗)
     function calcLineWidth(t, s) {
-      var minLineWidth = 10;
-      var maxLineWidth = 30;
+      var lineWidth;
+      var v = s / t;
+      if (v < minV) {
+        lineWidth = maxLineWidth;
+      } else if (v > maxV) {
+        lineWidth = minLineWidth;
+      } else {
+        // 一元一次方程
+        lineWidth = maxLineWidth - (v - minV)/(maxV - minV)*(maxLineWidth-minLineWidth);
+      }
 
+      if (lastLineWidth === -1) {
+        lastLineWidth = lineWidth;
+      }
+      // return lineWidth;
+      // 平滑处理
+      return lastLineWidth * 2/3 + lineWidth * 1/3;
+    }
+
+    function startStroke(point) {
+      isMouseDown = true;
+      lastLocation = windowToCanvas(point);
+      lastTimestamp = new Date().getTime();
+    }
+    function endStroke() {
+      isMouseDown = false;
+    }
+    function moveStroke(point) {
+      var currentLocation = windowToCanvas(point);
+      var currentTimestamp = new Date().getTime();
+
+      var s = calcDistance(lastLocation, currentLocation);
+      var t = currentTimestamp - lastTimestamp;
+
+      var lineWidth = calcLineWidth(t, s);
+
+      drawLine(lastLocation, currentLocation, lineWidth);
+
+      lastLocation = currentLocation;
+      lastTimestamp = currentTimestamp;
+      lastLineWidth = lineWidth;
     }
 
     canvas.onmousedown = function(e) {
       e.preventDefault();
 
-      isMouseDown = true;
-
-      lastLocation = windowToCanvas(e);
-      lastTimestamp = new Date().getTime();
+      startStroke({x: e.clientX, y: e.clientY});
     }
     canvas.onmouseup = function(e) {
       e.preventDefault();
 
-      isMouseDown = false;
+      endStroke();
     }
     canvas.onmouseout = function(e) {
       e.preventDefault();
 
-      isMouseDown = false;
+      endStroke();
     }
     canvas.onmousemove = function(e) {
       e.preventDefault();
 
       if (isMouseDown) {
-        var currentLocation = windowToCanvas(e);
-        var currentTimestamp = new Date().getTime();
-
-        var s = calcDistance(lastLocation, currentLocation);
-        var t = currentTimestamp - lastTimestamp;
-
-        var lineWidth = calcLineWidth(t, s);
-
-        drawLine(lastLocation, currentLocation, lineWidth);
-
-        lastLocation = currentLocation;
-        lastTimestamp = currentTimestamp;
+        moveStroke({x: e.clientX, y: e.clientY});
       }
     }
+
+    canvas.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+
+      var touch = e.touches[0];
+      startStroke({x: touch.pageX, y: touch.pageY});
+    })
+    canvas.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+
+      var touch = e.touches[0];
+      if (isMouseDown) {
+        moveStroke({x: touch.pageX, y: touch.pageY});
+      }
+    })
+    canvas.addEventListener('touchend', function(e) {
+      e.preventDefault();
+
+      endStroke();
+    })
 
     function drawLine(lastLocation, currentLocation, lineWidth) {
       ctx.beginPath();
       ctx.moveTo(lastLocation.x, lastLocation.y);
       ctx.lineTo(currentLocation.x, currentLocation.y);
-      ctx.strokeStyle = '#000';
+      ctx.strokeStyle = strokeColor;
       ctx.lineWidth = lineWidth;
       // 解决粗线条断裂的现象
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
       ctx.stroke();
     }
+  </script>
+
+  <script>
+    // function hasClass(el, cls) {
+    //   return el.className.indexOf(cls) !== -1 ? true : false;
+    // }
+    // function addClass(el, cls) {
+    //   if (!hasClass(el, cls)) {
+    //     el.className += ' ' + cls;
+    //   }
+    // }
+    // function removeClass(el, cls) {
+    //   if (hasClass(el, cls)) {
+    //     // 下面的正则有bug
+    //     el.className = el.className.replace(cls, '');
+    //     // var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+    //     // el.className = el.className.replace(reg, '');
+    //   }
+    // }
+
+    function addClass(obj, cls){
+      var obj_class = obj.className,//获取 class 内容.
+      blank = (obj_class != '') ? ' ' : '';//判断获取到的 class 是否为空, 如果不为空在前面加个'空格'.
+      added = obj_class + blank + cls;//组合原来的 class 和需要添加的 class.
+      obj.className = added;//替换原来的 class.
+    }
+      
+    function removeClass(obj, cls){
+      var obj_class = ' '+obj.className+' ';//获取 class 内容, 并在首尾各加一个空格. ex) 'abc    bcd' -> ' abc    bcd '
+      obj_class = obj_class.replace(/(\s+)/gi, ' '),//将多余的空字符替换成一个空格. ex) ' abc    bcd ' -> ' abc bcd '
+      removed = obj_class.replace(' '+cls+' ', ' ');//在原来的 class 替换掉首尾加了空格的 class. ex) ' abc bcd ' -> 'bcd '
+      removed = removed.replace(/(^\s+)|(\s+$)/g, '');//去掉首尾空格. ex) 'bcd ' -> 'bcd'
+      obj.className = removed;//替换原来的 class.
+    }
+      
+    function hasClass(obj, cls){
+      var obj_class = obj.className,//获取 class 内容.
+      obj_class_lst = obj_class.split(/\s+/);//通过split空字符将cls转换成数组.
+      x = 0;
+      for(x in obj_class_lst) {
+        if(obj_class_lst[x] == cls) {//循环数组, 判断是否包含cls
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function getStyle(el, attr) {
+      if (el.currentStyle) {
+        // IE
+        console.log('IE browser');
+        return el.currentStyle[attr];
+      } else if (getComputedStyle) {
+        console.log('stand browser');
+        // return getComputedStyle(el, null)[attr];
+        return window.getComputedStyle(el, null).getPropertyValue(attr);
+      }
+    }
+
+    var color_btn = document.querySelectorAll('.color_btn');
+    color_btn_arr = [...color_btn];
+    document.getElementById('controller').addEventListener('click', function(e) {
+      var el = e.target;
+
+      // 类名的增删查 方法一：正则
+      // if(hasClass(el, 'color_btn')) {
+      //   color_btn_arr.forEach(item => {
+      //     removeClass(item, 'color_btn_selected');
+      //   });
+      //   addClass(el, 'color_btn_selected');
+      //   strokeColor = getStyle(el, 'background-color');
+      // }
+
+      // 类名的增删查 方法二：classList
+      if(el.classList.contains('color_btn')) {
+        color_btn_arr.forEach(item => {
+          item.classList.remove('color_btn_selected');
+        });
+        el.classList.add('color_btn_selected');
+        strokeColor = getStyle(el, 'background-color');
+      }
+    });
   </script>
 
   <script>
