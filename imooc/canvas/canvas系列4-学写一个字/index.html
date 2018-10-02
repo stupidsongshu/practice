@@ -171,8 +171,8 @@
 
       var domRect = canvas.getBoundingClientRect();
       return {
-        x: point.x - domRect.x,
-        y: point.y - domRect.y
+        x: Math.round(point.x - domRect.x),
+        y: Math.round(point.y - domRect.y)
       }
     }
 
@@ -228,22 +228,18 @@
 
     canvas.onmousedown = function(e) {
       e.preventDefault();
-
       startStroke({x: e.clientX, y: e.clientY});
     }
     canvas.onmouseup = function(e) {
       e.preventDefault();
-
       endStroke();
     }
     canvas.onmouseout = function(e) {
       e.preventDefault();
-
       endStroke();
     }
     canvas.onmousemove = function(e) {
       e.preventDefault();
-
       if (isMouseDown) {
         moveStroke({x: e.clientX, y: e.clientY});
       }
@@ -251,13 +247,11 @@
 
     canvas.addEventListener('touchstart', function(e) {
       e.preventDefault();
-
       var touch = e.touches[0];
       startStroke({x: touch.pageX, y: touch.pageY});
     })
     canvas.addEventListener('touchmove', function(e) {
       e.preventDefault();
-
       var touch = e.touches[0];
       if (isMouseDown) {
         moveStroke({x: touch.pageX, y: touch.pageY});
@@ -265,7 +259,6 @@
     })
     canvas.addEventListener('touchend', function(e) {
       e.preventDefault();
-
       endStroke();
     })
 
@@ -362,32 +355,6 @@
         strokeColor = getStyle(el, 'background-color');
       }
     });
-  </script>
-
-  <script>
-    function *calculate(a, b) {
-      let sum = a + b;
-      yield console.log(sum);
-      let sub = a - b;
-      yield console.log(sub);
-    }
-    var gen = calculate(3, 4);
-    console.log(gen);
-    gen.next();
-    gen.next();
-
-    async function test() {
-      // return 'hello world';
-      var str = await setTimeout(_ => {
-        console.log(123);
-      }, 3000);
-      return str;
-    }
-    // console.log(test);
-    // console.log(test());
-    test().then(res => {
-      console.log(res);
-    })
   </script>
 </body>
 </html>
