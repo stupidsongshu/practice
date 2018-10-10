@@ -96,7 +96,7 @@
     <p>1</p>
     <p>1</p>
     <p>1</p>
-    <p>1</p>
+    <p id="el">smooth</p>
     <p>1</p>
     <p>1</p>
     <p>1</p>
@@ -119,7 +119,50 @@
     <p>3</p>
     <p>4</p>
     <p>5</p>
+    <p>6</p>
+    <p>7</p>
+    <p>8</p>
+    <p>9</p>
+    <p>10</p>
   </div>
-  <footer>footer</footer>
+  <footer>
+    footer
+    <button id="smoothScroll">smoothScroll</button>
+  </footer>
+
+  <script>
+    console.log('start');
+    var promise = new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        resolve('hello');
+      }, 2000);
+    }).then(value => {
+      console.log(value);
+      // 不直接返回Promise
+      // 立即执行函数里面的Promise与then不在同一个栈
+      // (function() {
+      //   return new Promise(resolve => {
+      //     setTimeout(_ => {
+      //       console.log('Mr.Laurence');
+      //       resolve('Merry Xmas');
+      //     })
+      //   }, 2000)
+      // }());
+      return false;
+    }).then(value => {
+      console.log(value + ' world');
+      return 123;
+    }).then(value => {
+      console.log(value);
+    })
+  </script>
+
+  <script>
+    document.getElementById('smoothScroll').addEventListener('click', function() {
+      document.getElementById('el').scrollIntoView({
+        behavior: 'smooth'
+      });
+    })
+  </script>
 </body>
 </html>

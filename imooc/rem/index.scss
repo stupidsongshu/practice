@@ -1,0 +1,38 @@
+@function px2rem($px) {
+  $rem : 37.5px;
+  @return ($px / $rem) + rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+ul, li {
+  list-style: none;
+}
+.clearfix {
+  display: table;
+}
+.clearfix::after {
+  content: '';
+  clear: both;
+  height: 0;
+  visibility: hidden;
+}
+.header {
+  width: 100%;
+  height: px2rem(40px);
+  background-color: #f00;
+  padding-left: px2rem(23px);
+  .header-item {
+    float: left;
+    margin-right: px2rem(20px);
+    line-height: px2rem(40px);
+    font-size: px2rem(16px);
+    color: #ffcdce;
+    &:nth-child(2) {
+      font-size: px2rem(17px);
+      color: #fff;
+    }
+  }
+}
