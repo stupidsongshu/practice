@@ -7,11 +7,6 @@
   <title>canvas玩儿转红包照片</title>
   <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
   <style>
-    #blur-img {
-      display: block;
-      margin: 0 auto;
-      filter: blur(5px);
-    }
     .transform {
       display: inline-block;
       position: relative;
@@ -32,11 +27,131 @@
       transform: scaleX(1);
       transform-origin: 0 0;
     }
+
+    #blur-wrapper {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      margin: 0 auto;
+    }
+    #blur-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      filter: blur(5px);
+      z-index: 1;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+    }
+    .button {
+      position: absolute;
+      z-index: 3;
+      width: 100px;
+      height: 30px;
+      color: #fff;
+      text-decoration: none;
+      text-align: center;
+      line-height: 30px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #button-reset {
+      left: 50px;
+      bottom: 20px;
+      background-color: #058;
+    }
+    #button-reset:hover {
+      background-color: #047;
+    }
+    #button-show {
+      right: 50px;
+      bottom: 20px;
+      background-color: #085;
+    }
+    #button-show:hover {
+      background-color: #074;
+    }
   </style>
 </head>
 <body>
-  <img id="blur-img" src="./bg.jpeg" alt="">
-
   <div class="transform">hover me</div>
+
+  <div id="blur-wrapper">
+    <img id="blur-img" src="./bg.jpeg" alt="">
+    <canvas id="canvas"></canvas>
+
+    <a class="button" id="button-reset">reset</a>
+    <a class="button" id="button-show">show</a>
+  </div>
+
+  <script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = 400;
+    canvas.height = 400;
+    var ctx = canvas.getContext('2d');
+    var radius = 50;
+    // 剪辑区域
+    var clipRegion = {
+      x: -1,
+      y: -1,
+      r: -1
+    };
+    var image = new Image();
+    image.src = './bg.jpeg';
+    image.onload = function() {
+      initCanvas();
+    }
+
+    function initCanvas() {
+      clipRegion.x = range(radius, canvas.width - radius);
+      clipRegion.y = range(radius, canvas.height - radius);
+      clipRegion.r = radius;
+
+      draw(image, clipRegion);
+    }
+
+    function range(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function setClipRegion(clipRegion) {
+      ctx.beginPath();
+      ctx.arc(clipRegion.x, clipRegion.y, clipRegion.r, 0, 2*Math.PI);
+      ctx.clip();  
+    }
+
+    function draw(image, clipRegion) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.save();
+      setClipRegion(clipRegion);
+      ctx.drawImage(image, 0, 0);
+      ctx.restore();
+    }
+
+    var buttonReset = document.getElementById('button-reset');
+    var buttonShow = document.getElementById('button-show');
+    buttonReset.addEventListener('click', function() {
+      initCanvas();
+    })
+    buttonShow.addEventListener('click', function() {
+      // var rMax = 2*Math.max(canvas.width, canvas.height);
+      var diagonal = Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height);
+      var rMax = Math.ceil(diagonal);
+      var timer = setInterval(function() {
+        console.log('animation')
+        if (clipRegion.r >= rMax) {
+          clearInterval(timer);
+        } else {
+          clipRegion.r += 20;
+          draw(image, clipRegion);
+        }
+      }, 30)
+    })
+  </script>
 </body>
 </html>
