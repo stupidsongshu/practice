@@ -6,6 +6,9 @@
 
 <script>
 export default {
+  metaInfo: {
+    title: 'LOGIN page'
+  },
   data() {
     return {
       name: 'login'

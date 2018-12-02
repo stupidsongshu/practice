@@ -25,6 +25,9 @@ import tabs from './tabs.vue'
 let id = 0
 
 export default {
+  metaInfo: {
+    title: 'TODO page'
+  },
   props: ['id'],
   data() {
     return {

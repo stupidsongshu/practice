@@ -4,7 +4,8 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const baseWebpackConfig = require('./webpack.base.config')
+const baseWebpackConfig = require('./webpack.config.base')
+const VueClientPliugin = require('vue-server-renderer/client-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -14,8 +15,8 @@ const defaultPlugins = [
   // short-circuits all Vue.js warning code
   new webpack.DefinePlugin({
     'process.env': {
-      // NODE_ENV: isDev ? '"development"' : '"production"'
-      NODE_ENV: '"production"'
+      NODE_ENV: isDev ? '"development"' : '"production"'
+      // NODE_ENV: '"production"'
     }
   }),
   // new HtmlWebpackPlugin({
@@ -28,7 +29,8 @@ const defaultPlugins = [
   // }),
   new HtmlWebpackPlugin({
     template: path.join(__dirname, 'template.html')
-  })
+  }),
+  new VueClientPliugin()
 ]
 
 const devServer = {
@@ -44,8 +46,8 @@ const devServer = {
   hot: true,
   // https://webpack.docschina.org/configuration/dev-server/#devserver-historyapifallback 当使用 HTML5 History API 时，任意的 404 响应都可能需要被替代为 index.html。
   historyApiFallback: {
-    // index: '/public/index.html'
-    index: '/index.html'
+    index: '/public/index.html'
+    // index: '/index.html'
   }
 }
 
@@ -82,12 +84,13 @@ if (isDev) { // development 开发环境
 } else { // production 生产环境
   config = merge(baseWebpackConfig, {
     entry: {
-      app: path.join(__dirname, '../client/index.js'),
+      app: path.join(__dirname, '../client/client-entry.js'),
       // 将vue类库单独打包
       vendor: ['vue'],
     },
     output: {
-      filename: '[name].[chunkhash:8].js'
+      filename: '[name].[chunkhash:8].js',
+      publicPath: '/public/'
     },
     module: {
       rules: [

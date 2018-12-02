@@ -15,4 +15,3 @@
     font-weight 100
     color rgba(175, 47, 47, .4)
 </style>
-

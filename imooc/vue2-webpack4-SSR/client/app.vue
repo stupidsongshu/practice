@@ -8,6 +8,7 @@
       <router-view></router-view>
     </transition>
     <v-footer></v-footer>
+    <span style="color: yellow;">{{count}}</span>
   </div>
 </template>
 
@@ -17,10 +18,23 @@ import footer from './layout/footer.jsx'
 import todo from './views/todo/todo.vue'
 
 export default {
+  metaInfo: {
+    title: 'Test vue-meta'
+  },
   components: {
     'v-header': header,
     'v-footer': footer,
     todo
+  },
+  computed: {
+    count() {
+      return this.$store.state.count
+    }
+  },
+  created() {
+    setInterval(_ => {
+      this.$store.commit('increment');
+    }, 1000)
   }
 }
 </script>
