@@ -1,12 +1,29 @@
 <template>
   <div class="todo">
-    <tabs :filter="filter" :todos="todos" @toggle="toggleEvent" @clearAllCompleted="clearAllCompletedEvent" />
+    <div class="tabs-container">
+      {{inputContent}}
+      <tabs :value="tabValue" @change="handleChangeTab">
+        <tab label="tab1" index="1">
+          <span>Tab content 1 {{inputContent}}</span>
+        </tab>
+        <tab index="2">
+          <span slot="label" style="color: pink;">Tab 2</span>
+          <span>Tab content 2</span>
+        </tab>
+        <tab label="tab3" index="3">
+          <span slot="label">Tab 3</span>
+          <span>Tab content 3</span>
+        </tab>
+      </tabs>
+    </div>
+    <helper-tabs :filter="filter" :todos="todos" @toggle="toggleEvent" @clearAllCompleted="clearAllCompletedEvent" />
     <input type="text"
       class="add-input"
       autofocus
       placeholder="请输入"
       @keyup.enter="addTodo"
       @blur="addTodo"
+      v-model="inputContent"
     >
 
     <item
@@ -20,7 +37,7 @@
 
 <script>
 import item from './item.vue'
-import tabs from './tabs.vue'
+import helperTabs from './tabs.vue'
 
 let id = 0
 
@@ -32,12 +49,14 @@ export default {
   data() {
     return {
       todos: [],
-      filter: 'all'
+      filter: 'all',
+      tabValue: '1',
+      inputContent: ''
     }
   },
   components: {
     item,
-    tabs
+    helperTabs
   },
   computed: {
     todoFilter() {
@@ -83,6 +102,9 @@ export default {
     },
     clearAllCompletedEvent() {
       this.todos = this.todos.filter(todo => !todo.completed)
+    },
+    handleChangeTab (index) {
+      this.tabValue = index
     }
   }
 }
@@ -111,5 +133,9 @@ export default {
   padding 16px 16px 16px 60px
   border none
   box-shadow inset 0 -2px 1px rgba(0, 0, 0, .1)
+
+.tabs-container
+  // padding: 0 15px
+  background-color: #fff
 </style>
 

@@ -2,13 +2,15 @@
   <div id="app">
     <div id="cover"></div>
     <v-header></v-header>
-    <router-link to="/app/123">todo</router-link>
     <router-link to="/login" :event="['click', 'mouseleave']">login</router-link>
+    <router-link to="/app/123">todo</router-link>
     <transition name="fade">
       <router-view></router-view>
     </transition>
     <v-footer></v-footer>
+    <button @click="generateNotify">generateNotify</button>
     <span style="color: yellow;">{{count}}</span>
+    <notification content="test notification" />
   </div>
 </template>
 
@@ -16,7 +18,7 @@
 import header from './layout/header.vue'
 import footer from './layout/footer.jsx'
 import todo from './views/todo/todo.vue'
-
+let count = 0
 export default {
   metaInfo: {
     title: 'Test vue-meta'
@@ -35,6 +37,14 @@ export default {
     setInterval(_ => {
       this.$store.commit('increment');
     }, 1000)
+  },
+  methods: {
+    generateNotify () {
+      this.$notify({
+        content: 'Hello Notify',
+        btn: `close${count++}`
+      })
+    }
   }
 }
 </script>

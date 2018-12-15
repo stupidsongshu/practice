@@ -44,6 +44,7 @@ const devServer = {
   },
   open: true,
   hot: true,
+  headers: { 'Access-Control-Allow-Origin': '*' },
   // https://webpack.docschina.org/configuration/dev-server/#devserver-historyapifallback 当使用 HTML5 History API 时，任意的 404 响应都可能需要被替代为 index.html。
   historyApiFallback: {
     index: '/public/index.html'

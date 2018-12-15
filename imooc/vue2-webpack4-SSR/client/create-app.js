@@ -7,11 +7,16 @@ import App from './app.vue'
 import createRouter from './router/router'
 import createStore from './store/index'
 
+import Notification from './components/notification'
+import Tabs from './components/tabs'
+
 import './assets/styles/global.styl'
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(Meta)
+Vue.use(Notification)
+Vue.use(Tabs)
 
 export default () => {
   const router = createRouter()
