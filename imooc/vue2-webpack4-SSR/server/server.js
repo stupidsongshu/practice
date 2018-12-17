@@ -1,9 +1,16 @@
 const Koa = require('koa')
 const KoaSend = require('koa-send')
+const KoaBody = require('koa-body')
 const path = require('path')
+
 const pageRouterDev = require('./routers/dev-ssr')
 const pageRouterPro = require('./routers/ssr')
 const staticRouter = require('./routers/static')
+const apiRouter = require('./routers/api')
+const appConfig = require('../app.config')
+const createDb = require('./db/db')
+
+const db = createDb(appConfig.db.appId, appConfig.db.appKey)
 
 const isDev = process.env.NODE_ENV === 'development'
 const app = new Koa()
@@ -23,6 +30,12 @@ app.use(async (ctx, next) => {
   }
 })
 
+// 数据库
+app.use(async (ctx, next) => {
+  ctx.db = db
+  await next()
+})
+// 处理favicon
 app.use(async (ctx, next) => {
   if (ctx.path === '/favicon.ico') {
     await KoaSend(ctx, '/favicon.ico', { root: path.join(__dirname, '../') })
@@ -30,8 +43,12 @@ app.use(async (ctx, next) => {
     await next()
   }
 })
-
+// koa默认没有处理post请求body体，需要使用中间件koa-body
+app.use(KoaBody())
+// 静态资源
 app.use(staticRouter.routes()).use(staticRouter.allowedMethods())
+// api接口请求
+app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
 
 let pageRouter
 if (isDev) {

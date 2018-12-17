@@ -10,6 +10,7 @@ export default {
     const contents = this.panes.map(pane => {
       return pane.active ? pane.$slots.default : null
     })
+    console.log('contents:', contents)
     return (
       <div class="tabs-content">
         {contents}

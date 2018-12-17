@@ -1,7 +1,7 @@
 <template>
   <div class="todo">
+    {{inputContent}}
     <div class="tabs-container">
-      {{inputContent}}
       <tabs :value="tabValue" @change="handleChangeTab">
         <tab label="tab1" index="1">
           <span>Tab content 1 {{inputContent}}</span>
@@ -22,7 +22,6 @@
       autofocus
       placeholder="请输入"
       @keyup.enter="addTodo"
-      @blur="addTodo"
       v-model="inputContent"
     >
 
