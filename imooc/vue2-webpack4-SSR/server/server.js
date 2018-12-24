@@ -1,12 +1,14 @@
 const Koa = require('koa')
 const KoaSend = require('koa-send')
 const KoaBody = require('koa-body')
+const KoaSession = require('koa-session')
 const path = require('path')
 
 const pageRouterDev = require('./routers/dev-ssr')
 const pageRouterPro = require('./routers/ssr')
 const staticRouter = require('./routers/static')
 const apiRouter = require('./routers/api')
+const userRouter = require('./routers/user')
 const appConfig = require('../app.config')
 const createDb = require('./db/db')
 
@@ -14,6 +16,13 @@ const db = createDb(appConfig.db.appId, appConfig.db.appKey)
 
 const isDev = process.env.NODE_ENV === 'development'
 const app = new Koa()
+
+app.keys = ['vue ssr tech']
+const KoaSessionConfig = {
+  key: 'v-ssr-id',
+  maxAge: 2 * 60 * 60 * 1000
+}
+app.use(KoaSession(KoaSessionConfig, app))
 
 app.use(async (ctx, next) => {
   try {
@@ -49,6 +58,7 @@ app.use(KoaBody())
 app.use(staticRouter.routes()).use(staticRouter.allowedMethods())
 // api接口请求
 app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
+app.use(userRouter.routes()).use(userRouter.allowedMethods())
 
 let pageRouter
 if (isDev) {

@@ -21,7 +21,7 @@
       class="add-input"
       autofocus
       placeholder="请输入"
-      @keyup.enter="addTodo"
+      @keyup.enter="handleAddTodo"
       v-model="inputContent"
     >
 
@@ -38,6 +38,8 @@
 import item from './item.vue'
 import helperTabs from './tabs.vue'
 
+import { mapState, mapActions } from 'vuex'
+
 let id = 0
 
 export default {
@@ -47,7 +49,7 @@ export default {
   props: ['id'],
   data() {
     return {
-      todos: [],
+      // todos: [],
       filter: 'all',
       tabValue: '1',
       inputContent: ''
@@ -58,6 +60,7 @@ export default {
     helperTabs
   },
   computed: {
+    ...mapState(['todos']),
     todoFilter() {
       if (this.filter === 'all') {
         return this.todos
@@ -69,38 +72,68 @@ export default {
   created() {
     console.log(this.$route)
     console.log('路由props选项传过来的 id：', this.id)
+    this.fetchTodos()
   },
   methods: {
-    addTodo(e) {
-      var todoContent = e.target.value.trim()
+    ...mapActions([
+      'fetchTodos',
+      'addTodo',
+      'deleteTodo',
+      'deleteAllCompleted'
+    ]),
+    // handleAddTodo(e) {
+    //   var todoContent = e.target.value.trim()
 
-      if (todoContent !== '') {
-        this.todos.unshift({
-          id: id++,
-          completed: false,
-          content: e.target.value.trim()
-        })
+    //   if (todoContent !== '') {
+    //     this.todos.unshift({
+    //       id: id++,
+    //       completed: false,
+    //       content: e.target.value.trim()
+    //     })
   
-        e.target.value = ''
+    //     e.target.value = ''
+    //   }
+    // },
+    handleAddTodo (e) {
+      let content = e.target.value.trim()
+      if (!content) {
+        this.$notify({
+          content: '请输入todo内容'
+        })
+        return
       }
+      const todo = {
+        completed: false,
+        content
+      }
+      this.addTodo(todo)
+      e.target.value = ''
     },
-    delEvevnt(data) {
-      // 方法一 (循环里面尽量不要splice 因为index会变)
-      // for (var i = 0, len = this.todos.length; i < len; i++) {
-      //   if (this.todos[i].id === data) {
-      //     this.todos.splice(i, 1)
-      //     break // 一定要 break 跳出循环，否则会有bug
-      //   }
-      // }
+    // delEvevnt(data) {
+    //   // 方法一 (循环里面尽量不要splice 因为index会变)
+    //   // for (var i = 0, len = this.todos.length; i < len; i++) {
+    //   //   if (this.todos[i].id === data) {
+    //   //     this.todos.splice(i, 1)
+    //   //     break // 一定要 break 跳出循环，否则会有bug
+    //   //   }
+    //   // }
 
-      // 方法二
-      this.todos.splice(this.todos.findIndex(todo => todo.id === data), 1)
+    //   // 方法二
+    //   this.todos.splice(this.todos.findIndex(todo => todo.id === data), 1)
+    // },
+    delEvevnt (id) {
+      this.deleteTodo(id)
     },
     toggleEvent(state) {
       this.filter = state
     },
-    clearAllCompletedEvent() {
-      this.todos = this.todos.filter(todo => !todo.completed)
+    // clearAllCompletedEvent() {
+    //   this.todos = this.todos.filter(todo => !todo.completed)
+    // },
+    clearAllCompletedEvent () {
+      this.deleteAllCompleted({
+        ids: this.todos.filter(t => t.completed).map(t => t.id)
+      })
     },
     handleChangeTab (index) {
       this.tabValue = index

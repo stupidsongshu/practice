@@ -9,7 +9,7 @@
     </transition>
     <v-footer></v-footer>
     <button @click="generateNotify">generateNotify</button>
-    <span style="color: yellow;">{{count}}</span>
+    <!-- <span style="color: yellow;">{{count}}</span> -->
     <notification content="test notification" />
   </div>
 </template>
@@ -29,15 +29,15 @@ export default {
     todo
   },
   computed: {
-    count() {
-      return this.$store.state.count
-    }
+    // count() {
+    //   return this.$store.state.count
+    // }
   },
-  created() {
-    setInterval(_ => {
-      this.$store.commit('increment');
-    }, 1000)
-  },
+  // created() {
+  //   setInterval(_ => {
+  //     this.$store.commit('increment');
+  //   }, 1000)
+  // },
   methods: {
     generateNotify () {
       this.$notify({
