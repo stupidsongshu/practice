@@ -3,6 +3,11 @@ import { createError } from './util'
 
 const request = axios.create({
   baseURL: '/'
+  /**
+   * 浏览器有同域，服务端没有同域。
+   * 可以通过VUE_ENV判断服务端环境时，服务端自己给自己发请求，但这样比较怪异，而且最重要的是这样操作无法拿到cookie.
+   */
+  // baseURL: process.env.VUE_ENV === 'server' ? 'http://127.0.0.1:3333' : '/'
 })
 
 const handleRequest = (request) => {
@@ -18,10 +23,10 @@ const handleRequest = (request) => {
       }
       resolve(data.data)
     }).catch(err => {
-      console.error('handleRequest error:', err.response)
+      console.error('handleRequest error:', err.message)
       const resp = err.response
 
-      if (resp.status === 401) {
+      if (resp && resp.status === 401) {
         reject(createError(401, 'need auth'))
       }
     })

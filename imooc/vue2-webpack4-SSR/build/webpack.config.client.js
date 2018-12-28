@@ -131,4 +131,10 @@ if (isDev) { // development 开发环境
   })
 }
 
+config.resolve = {
+  alias: {
+    'aliasModel': path.join(__dirname, '../client/model/client-model.js')
+  }
+}
+
 module.exports = config

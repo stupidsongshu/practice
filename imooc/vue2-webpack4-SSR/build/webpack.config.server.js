@@ -45,4 +45,10 @@ let config = merge(baseWebpackConfig, {
   ]
 })
 
+config.resolve = {
+  alias: {
+    'aliasModel': path.join(__dirname, '../client/model/server-model.js')
+  }
+}
+
 module.exports = config

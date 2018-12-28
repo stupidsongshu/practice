@@ -24,7 +24,6 @@ apiRouter
   // get
   .get('/todos', async ctx => {
     const todos = await ctx.db.getAllTodos()
-    console.log('todos:', todos)
     ctx.body = successResponse(todos)
   })
   // add

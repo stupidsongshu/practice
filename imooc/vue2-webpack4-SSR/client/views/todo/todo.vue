@@ -30,6 +30,7 @@
       v-for="todo in todoFilter"
       :key="todo.id"
       @del="delEvevnt"
+      @toggle="toggleTodoState(todo)"
     />
   </div>
 </template>
@@ -70,16 +71,22 @@ export default {
     }
   },
   created() {
-    console.log(this.$route)
-    console.log('路由props选项传过来的 id：', this.id)
+    // console.log('路由props选项传过来的 id：', this.id)
     this.fetchTodos()
+  },
+  asyncData ({ store }) {
+    return new Promise((resolve) => {
+      store.dispatch('fetchTodos')
+      resolve()
+    })
   },
   methods: {
     ...mapActions([
       'fetchTodos',
       'addTodo',
       'deleteTodo',
-      'deleteAllCompleted'
+      'deleteAllCompleted',
+      'updateTodo'
     ]),
     // handleAddTodo(e) {
     //   var todoContent = e.target.value.trim()
@@ -137,6 +144,14 @@ export default {
     },
     handleChangeTab (index) {
       this.tabValue = index
+    },
+    toggleTodoState (todo) {
+      this.updateTodo({
+        id: todo.id,
+        todo: Object.assign({}, todo, {
+          completed: !todo.completed
+        })
+      })
     }
   }
 }
