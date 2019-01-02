@@ -20,8 +20,8 @@ export default {
   },
   data() {
     return {
-      userName: '',
-      password: '',
+      userName: 'zys',
+      password: 'zys',
       errorMsg: ''
     }
   },

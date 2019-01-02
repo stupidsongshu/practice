@@ -4,6 +4,10 @@ export default context => {
   return new Promise((resolve, reject) => {
     const { app, router, store } = createApp()
 
+    if (context.user) {
+      store.state.user = context.user
+    }
+
     router.push(context.url)
 
     router.onReady(() => {
@@ -14,18 +18,24 @@ export default context => {
 
       Promise.all(matchedComponents.map(component => {
         if (component.asyncData) {
+          console.log('has asyncData------')
           return component.asyncData({
             route: router.currentRoute,
-            store
+            store,
+            router
           })
         }
-      })).then(data => {
-        console.log('asyncData: ', data)
+      })).then(_ => {
         console.log('store state---: ', store.state)
-      })
 
-      context.meta = app.$meta()
-      resolve(app)
+        context.meta = app.$meta()
+
+        context.state = store.state
+
+        context.router = router
+
+        resolve(app)
+      })
     })
   })
 }

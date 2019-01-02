@@ -70,15 +70,22 @@ export default {
       return this.todos.filter(todo => todo.completed === completed)
     }
   },
-  created() {
+  mounted() {
     // console.log('路由props选项传过来的 id：', this.id)
-    this.fetchTodos()
+    if (this.todos && this.todos.length < 1) {
+      this.fetchTodos()
+    }
   },
-  asyncData ({ store }) {
-    return new Promise((resolve) => {
-      store.dispatch('fetchTodos')
-      resolve()
-    })
+  asyncData ({ store, router }) {
+    // ssr 判断登录状态
+    console.log('asyncData store.state.user:', store.state.user)
+    if (store.state.user) {
+      // BUG: 直接reutrn会有问题
+      return store.dispatch('fetchTodos')
+    }
+    console.log('no store.state.user')
+    router.replace('/login')
+    return Promise.resolve()
   },
   methods: {
     ...mapActions([
@@ -96,8 +103,8 @@ export default {
     //       id: id++,
     //       completed: false,
     //       content: e.target.value.trim()
-    //     })
   
+    //     })
     //     e.target.value = ''
     //   }
     // },

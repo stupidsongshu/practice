@@ -4,7 +4,7 @@
 const routes = [
   {
     path: '/',
-    redirect: '/login'
+    redirect: '/todo'
   },
   {
     path: '/app/:id',

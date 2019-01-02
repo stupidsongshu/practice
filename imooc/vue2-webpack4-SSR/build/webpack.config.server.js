@@ -13,7 +13,7 @@ let config = merge(baseWebpackConfig, {
   output: {
     libraryTarget: 'commonjs2',
     filename: 'server-entry.js',
-    path: path.join(__dirname, '../public/server-bundle')
+    path: path.join(__dirname, '../server-build')
   },
   module: {
     rules: [
