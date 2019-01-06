@@ -10,8 +10,8 @@ const config = {
   output: {
     filename: 'bundle.[name].js',
     // path: path.join(__dirname, '../dist'),
-    path: path.join(__dirname, '../public'),
     // publicPath: '/public/'
+    path: path.join(__dirname, '../public'),
     publicPath: 'http://127.0.0.1:8000/public/'
   },
   module: {

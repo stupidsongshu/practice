@@ -4,8 +4,6 @@ const KoaBody = require('koa-body')
 const KoaSession = require('koa-session')
 const path = require('path')
 
-const pageRouterDev = require('./routers/dev-ssr')
-const pageRouterPro = require('./routers/ssr')
 const staticRouter = require('./routers/static')
 const apiRouter = require('./routers/api')
 const userRouter = require('./routers/user')
@@ -62,9 +60,12 @@ app.use(userRouter.routes()).use(userRouter.allowedMethods())
 
 let pageRouter
 if (isDev) {
-  pageRouter = pageRouterDev
+  pageRouter = require('./routers/dev-ssr')
+  // pageRouter = require('./routers/dev-ssr-no-bundle')
+  // pageRouter = require('./routers/dev-ssr-no-bundle-no-memoryfs')
 } else {
-  pageRouter = pageRouterPro
+  // pageRouter = require('./routers/ssr')
+  pageRouter = require('./routers/ssr-no-bundle')
 }
 app.use(pageRouter.routes()).use(pageRouter.allowedMethods())
 

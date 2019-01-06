@@ -5,7 +5,7 @@ const merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const baseWebpackConfig = require('./webpack.config.base')
-const VueClientPliugin = require('vue-server-renderer/client-plugin')
+const VueClientPlugin = require('vue-server-renderer/client-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -30,7 +30,7 @@ const defaultPlugins = [
   new HtmlWebpackPlugin({
     template: path.join(__dirname, 'template.html')
   }),
-  new VueClientPliugin()
+  new VueClientPlugin()
 ]
 
 const devServer = {
@@ -119,14 +119,17 @@ if (isDev) { // development 开发环境
     },
     plugins: defaultPlugins.concat([
       new ExtractTextPlugin({
-        filename: '[name].[contenthash:8].css'
+        // filename: '[name].[contenthash:8].css'
+        filename: 'styles.[contenthash:8].css'
       }),
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor'
       }),
       new webpack.optimize.CommonsChunkPlugin({
         name: 'runtime'
-      })
+      }),
+      // 路由懒加载--把组件按组分块
+      new webpack.NamedChunksPlugin()
     ])
   })
 }

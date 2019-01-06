@@ -6,6 +6,20 @@ const baseWebpackConfig = require('./webpack.config.base')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const VueServerPlugin = require('vue-server-renderer/server-plugin')
 
+const isDev = process.env.NODE_ENV === 'development'
+
+const plugins = [
+  new ExtractTextPlugin('styles.[contenthash:8].css'),
+  new webpack.DefinePlugin({
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) || '"development"',
+    'process.env.VUE_ENV': '"server"'
+  })
+]
+
+if (isDev) {
+  plugins.push(new VueServerPlugin())
+}
+
 let config = merge(baseWebpackConfig, {
   target: 'node',
   devtool: 'source-map',
@@ -35,14 +49,7 @@ let config = merge(baseWebpackConfig, {
       }
     ]
   },
-  plugins: [
-    new ExtractTextPlugin('styles.[contenthash:8].css'),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) || '"development"',
-      'process.env.VUE_ENV': '"server"'
-    }),
-    new VueServerPlugin()
-  ]
+  plugins
 })
 
 config.resolve = {
