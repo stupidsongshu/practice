@@ -20,32 +20,47 @@ export default {
       list: []
     }
   },
-  mounted() {
-    console.log('mounted')
-    let indexToListCount = this.$store.state.indexToListCount
-    let listNeedRefresh = this.$store.state.listNeedRefresh
-    if (indexToListCount === 1 && listNeedRefresh) {
-      console.log('mounted init')
+  computed: {
+    listNeedRefresh() {
+      return this.$store.state.listNeedRefresh
+    }
+  },
+  // mounted() {
+  //   console.log('mounted')
+  //   let indexToListCount = this.$store.state.indexToListCount
+  //   let listNeedRefresh = this.$store.state.listNeedRefresh
+  //   if (indexToListCount === 1 && listNeedRefresh) {
+  //     console.log('mounted init')
+  //     this.init()
+  //   }
+  // },
+  // activated() {
+  //   console.log('activated')
+  //   let indexToListCount = this.$store.state.indexToListCount
+  //   let listNeedRefresh = this.$store.state.listNeedRefresh
+  //   if (indexToListCount > 1 && listNeedRefresh) {
+  //     console.log('activated init')
+  //     let list = this.init()
+  //   }
+  // },
+  // beforeRouteEnter(to, from, next) {
+  //   next(vm => {
+  //     if (from.name === 'index') {
+  //       let indexToListCount = vm.$store.state.indexToListCount
+  //       indexToListCount++
+  //       vm.$store.commit('INDEX_TO_LIST_COUNT', indexToListCount)
+  //     }
+  //   })
+  // },
+  activated() {
+    if (this.listNeedRefresh) {
+      console.log('activated init')
       this.init()
     }
-  },
-  activated() {
-    console.log('activated')
-    let indexToListCount = this.$store.state.indexToListCount
-    let listNeedRefresh = this.$store.state.listNeedRefresh
-    if (indexToListCount > 1 && listNeedRefresh) {
-      console.log('activated init')
-      let list = this.init()
+    if (this.list.length === 0) {
+      console.log('刷新后数据丢失重新生成')
+      this.init()
     }
-  },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (from.name === 'index') {
-        let indexToListCount = vm.$store.state.indexToListCount
-        indexToListCount++
-        vm.$store.commit('INDEX_TO_LIST_COUNT', indexToListCount)
-      }
-    })
   },
   methods: {
     init() {

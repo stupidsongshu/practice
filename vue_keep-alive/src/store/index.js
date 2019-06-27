@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     indexToListCount: 1,
-    listNeedRefresh: false,
+    listNeedRefresh: true,
     refresh: true
   },
   mutations: {

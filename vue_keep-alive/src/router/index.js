@@ -64,15 +64,18 @@ let router = new Router({
   routes
 })
 
-router.afterEach((to, from) => {
-  if (from.name === 'index' && to.name === 'list') {
-    console.log('index -> list : need refresh')
-    store.commit('LIST_NEED_REFRESH', true)
+router.beforeEach((to, from, next) => {
+  if (to.name === 'list') {
+    if (from.name === 'index') {
+      console.log('index -> list : need refresh')
+      store.commit('LIST_NEED_REFRESH', true)
+    } else {
+      console.log('!index -> list : !need refresh')
+      store.commit('LIST_NEED_REFRESH', false)
+    }
   }
-  else if (from.name === 'list') {
-    console.log('detail -> list : not refresh')
-    store.commit('LIST_NEED_REFRESH', false)
-  }
+
+  next()
 })
 
 export default router

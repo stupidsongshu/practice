@@ -4,7 +4,6 @@
     <div>
       <h4 @click="back">back to keep-alive index</h4>
     </div>
-    <!-- <router-link :to="{name: 'KeepAliveDetail'}">go to keep-alive detail</router-link> -->
 
     <ul>
       <li class="item" v-for="(item,index) in list" :key="'item'+index">
@@ -24,20 +23,12 @@ export default {
       list: []
     }
   },
-  created() {
-    console.log('keep-alive created')
-  },
-  mounted() {
-    console.log('keep-alive mounted')
-  },
   computed: {
     refresh() {
       return this.$store.state.refresh
     }
   },
   activated() {
-    console.log('keep-alive activted')
-
     if (this.refresh) {
       console.log('keep-alive activted init')
       this.init()
