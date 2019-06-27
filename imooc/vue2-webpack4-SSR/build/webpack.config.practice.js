@@ -44,6 +44,9 @@ const devServer = {
 config = merge(baseWebpackConfig, {
   devtool: '#cheap-module-eval-source-map',
   entry: path.join(__dirname, '../practice/index.js'),
+  output: {
+    publicPath: 'http://127.0.0.1:8080/public/'
+  },
   devServer,
   resolve: {
     alias: {

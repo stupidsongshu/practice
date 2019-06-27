@@ -12,7 +12,7 @@ const removeInstance = (instance) => {
   instances.splice(index, 1)
 
   const len = instances.length
-  if (len <= 1) return
+  // if (len <= 1) return
   const removeHeight = instance.vm.height
   console.log('removeHeight:', removeHeight)
   for (let i = index; i < len; i++) {

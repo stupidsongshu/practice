@@ -2,6 +2,6 @@
 // import './lifecycle'
 // import './computedWatch'
 // import './extend'
-// import './twoWayBinding'
+import './twoWayBinding'
 // import './slot'
-import './render'
+// import './render'
