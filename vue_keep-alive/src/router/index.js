@@ -11,10 +11,8 @@ import keepAliveDetail from '@/components/keep-alive/detail'
 
 Vue.use(Router)
 
-/**
- * B页面跳转到A，A页面需要缓存
- * C页面跳转到A，A页面不需要被缓存
- */
+// 首页进入列表页时，列表页需要刷新；详情页进入（后退返回）列表页时，列表页不刷新
+
 const routes = [
   {
     path: '/',
