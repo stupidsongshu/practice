@@ -5,6 +5,10 @@ import index from '@/components/index'
 import list from '@/components/list'
 import detail from '@/components/detail'
 
+import keepAlive from '@/components/keep-alive/index'
+import keepAliveList from '@/components/keep-alive/list'
+import keepAliveDetail from '@/components/keep-alive/detail'
+
 Vue.use(Router)
 
 /**
@@ -36,6 +40,24 @@ const routes = [
       keepAlive: false
     }
   },
+  {
+    path: '/keep-alive',
+    name: 'KeepAlive',
+    component: keepAlive
+  },
+  {
+    path: '/keep-alive-list',
+    name: 'KeepAliveList',
+    component: keepAliveList,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: '/keep-alive-detail',
+    name: 'KeepAliveDetail',
+    component: keepAliveDetail
+  }
 ]
 
 let router = new Router({

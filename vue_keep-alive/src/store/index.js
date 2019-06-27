@@ -6,7 +6,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     indexToListCount: 1,
-    listNeedRefresh: false
+    listNeedRefresh: false,
+    refresh: true
   },
   mutations: {
     INDEX_TO_LIST_COUNT(state, payload) {
@@ -14,6 +15,9 @@ const store = new Vuex.Store({
     },
     LIST_NEED_REFRESH(state, payload) {
       state.listNeedRefresh = payload
+    },
+    Refresh(state, payload) {
+      state.refresh = payload
     }
   }
 })
